@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #F9F9F9;
+  --color-sage: #9DC08B;
+  --color-sage-dark: #47663A;
+  --color-sage-light: #C9EDB5;
+  --color-sand: #EDF1D6;
+  --color-earth-rose: #E49393;
+  --color-earth-rose-light: #FCA8A8;
+  --color-forest: #2D5016;
+  --color-charcoal: #3A3A3A;
+  --color-surface-variant: #43483F;
+  --color-outline: #73796E;
+  --color-outline-variant: #C3C8BC;
+  --font-family-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-family-sans);
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-sage);
+    color: white;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .glass-panel-strong {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .antigravity-shadow {
+    box-shadow: 0 40px 60px -10px rgba(26, 28, 28, 0.05);
+  }
+
+  .mesh-gradient {
+    background-color: #f9f9f9;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(157, 192, 139, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(237, 241, 214, 0.3) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(157, 192, 139, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(201, 237, 181, 0.12) 0px, transparent 40%);
+  }
+
+  .text-gradient-sage {
+    background: linear-gradient(135deg, #47663A, #9DC08B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .btn-primary {
+    background-color: var(--color-sage-dark);
+    color: white;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(157, 192, 139, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}

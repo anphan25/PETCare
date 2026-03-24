@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PETCare | Luxury Spa Booking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#43483f",
+                        "on-primary-container": "#314f25",
+                        "surface": "#f9f9f9",
+                        "surface-bright": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1a1c1c",
+                        "on-tertiary-fixed-variant": "#2c4f15",
+                        "tertiary-fixed": "#c4efa3",
+                        "secondary-container": "#fca8a8",
+                        "primary-fixed-dim": "#add19a",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#47663a",
+                        "surface-container-high": "#e8e8e8",
+                        "on-background": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#add19a",
+                        "on-tertiary-container": "#2d5016",
+                        "on-secondary-fixed-variant": "#713436",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#43682b",
+                        "primary-fixed": "#c9edb5",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#98c27b",
+                        "outline": "#73796e",
+                        "outline-variant": "#c3c8bc",
+                        "surface-tint": "#47663a",
+                        "secondary": "#8d4b4c",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e2e2e2",
+                        "background": "#f9f9f9",
+                        "secondary-fixed": "#ffdad9",
+                        "on-primary-fixed": "#052100",
+                        "surface-container": "#eeeeee",
+                        "on-secondary-container": "#783a3b",
+                        "on-primary-fixed-variant": "#304e24",
+                        "secondary-fixed-dim": "#ffb3b2",
+                        "on-secondary-fixed": "#3a090e",
+                        "inverse-on-surface": "#f1f1f1",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f3f3f3",
+                        "primary-container": "#9dc08b",
+                        "tertiary-fixed-dim": "#a8d38a",
+                        "surface-dim": "#dadada",
+                        "on-tertiary-fixed": "#0a2100"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .antigravity-shadow {
+            box-shadow: 0 40px 60px rgba(26, 28, 28, 0.05);
+        }
+        .mesh-gradient {
+            background: radial-gradient(at 0% 0%, #9dc08b 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, #edf1d6 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, #c9edb5 0px, transparent 50%),
+                        radial-gradient(at 0% 100%, #f3f3f3 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/25 dark:bg-black/25 backdrop-blur-xl shadow-[0_40px_60px_rgba(26,28,28,0.05)] transition-all duration-300">
+<div class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-bold text-emerald-900 dark:text-emerald-50 tracking-tight font-['Inter']">
+                PETCare
+            </div>
+<div class="hidden md:flex items-center space-x-8 font-['Inter'] tracking-tight">
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Home</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Products</a>
+<a class="text-emerald-900 dark:text-emerald-50 border-b-2 border-emerald-700/50 pb-1 font-semibold" href="#">Spa Booking</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Fashion</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-emerald-800 dark:text-emerald-200 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+</button>
+<button class="p-2 text-emerald-800 dark:text-emerald-200 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="relative pt-32 pb-20 px-6 max-w-screen-2xl mx-auto overflow-hidden">
+<!-- Floating Mesh Background Decor -->
+<div class="absolute -top-20 -left-20 w-96 h-96 bg-primary-container opacity-20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -right-20 w-[500px] h-[500px] bg-secondary-fixed opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Page Header -->
+<header class="relative mb-20 text-center md:text-left">
+<div class="inline-flex items-center space-x-2 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">pets</span>
+<span class="text-label-md tracking-[0.2em] uppercase font-semibold text-primary">The Ethereal Sanctuary</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-bold text-on-tertiary-container tracking-tight mb-6">Luxury Spa &amp; Grooming</h1>
+<p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                Give your pet the royal treatment they deserve. From organic chamomile baths to precision styling, book a pampering session today.
+            </p>
+<!-- Floating Elements -->
+<div class="absolute -top-10 right-20 opacity-20 animate-pulse hidden lg:block">
+<span class="material-symbols-outlined text-6xl text-primary">bubble_chart</span>
+</div>
+<div class="absolute top-40 -left-10 opacity-10 hidden lg:block">
+<span class="material-symbols-outlined text-4xl text-primary rotate-12">potted_plant</span>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
+<!-- Left Column (60%) -->
+<div class="lg:col-span-7 space-y-16">
+<!-- Step 1: Select Your Pet -->
+<section>
+<div class="flex items-center space-x-4 mb-8">
+<span class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</span>
+<h2 class="text-2xl font-semibold text-on-surface">Select Your Pet</h2>
+</div>
+<div class="glass-panel p-8 rounded-lg antigravity-shadow flex flex-wrap gap-6">
+<!-- Buddy -->
+<div class="flex flex-col items-center p-4 rounded-xl bg-primary-container/20 border-2 border-primary/40 cursor-pointer transition-all hover:translate-y-[-4px]">
+<div class="w-20 h-20 rounded-full overflow-hidden mb-3 ring-4 ring-primary/20">
+<img alt="Buddy Golden Retriever" class="w-full h-full object-cover" data-alt="close-up portrait of a happy golden retriever dog with soft sunlight reflecting in its eyes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxO6b_vWBb4KfwVqeMCMDS3YMtEic3sYt27nSkkkUtt801DZUxOuxiN6FBq1pC5Skm5ACIrKLlET8AY60tMfnJeZHw0YVdPp_o_ZLW2XNnCt1beda5rDAQID-MsmjYKJcj-QnJa3tDenqQOEn4-HHyDoQV28Oo5CnPeRdC8aj49Gid1Hgtv1XEG6UGhusZ8OahsRhFvLSuNX4fcvGHHcr3ah65CW48_cNb2ktfBiGPDNcGH6sdUf_RlLhSy56zN65G5cW0igHarVjO"/>
+</div>
+<span class="font-bold text-on-surface">Buddy</span>
+<span class="text-xs text-on-surface-variant">3y • Golden Retriever</span>
+</div>
+<!-- Mochi -->
+<div class="flex flex-col items-center p-4 rounded-xl glass-panel border-2 border-transparent cursor-pointer transition-all hover:bg-white/40 hover:translate-y-[-4px]">
+<div class="w-20 h-20 rounded-full overflow-hidden mb-3">
+<img alt="Mochi Persian Cat" class="w-full h-full object-cover" data-alt="close-up portrait of a fluffy white persian cat with large green eyes looking at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVthpTL4ADvx2a6hROdNu6iXlgeVGlEfljo09dgsV8nyNE-ELOoHnHTX5tW4oMKqvSvJJ8fNJcRbMZEUQoJeS3S9COxX1dCepV0EmbsigqggBg2JQRjbFVReHicwBePGXrRdcR6cCvniSDL1EEf6-v_NQYNcHRLW9rfyj28pLDzQxC40w4tWUo--2QWGBs0tGevPunfvld-ZWWGzPJZkhq_t7m4RYtAZd7FoBpO8D08CtUhiUZ3ytWVlgN4d-6EwkW780d8raixnU4"/>
+</div>
+<span class="font-bold text-on-surface">Mochi</span>
+<span class="text-xs text-on-surface-variant">2y • Persian Cat</span>
+</div>
+<!-- Add Button -->
+<button class="flex flex-col items-center justify-center p-4 w-32 h-36 rounded-xl border-2 border-dashed border-outline-variant hover:border-primary hover:text-primary transition-all group">
+<span class="material-symbols-outlined text-3xl mb-2 group-hover:scale-110 transition-transform">add_circle</span>
+<span class="text-sm font-medium">Add Pet</span>
+</button>
+</div>
+</section>
+<!-- Step 2: Choose Services -->
+<section>
+<div class="flex items-center space-x-4 mb-8">
+<span class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">2</span>
+<h2 class="text-2xl font-semibold text-on-surface">Choose Services</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- Full Grooming -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-transparent hover:border-primary-container shadow-sm hover:shadow-xl">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">content_cut</span>
+</div>
+<span class="font-bold text-lg text-primary">$45</span>
+</div>
+<h3 class="font-bold text-on-surface mb-1">Full Grooming Package</h3>
+<p class="text-sm text-on-surface-variant">Cut, wash, and style tailored to breed standards.</p>
+</div>
+<!-- Relaxing Bath -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-primary shadow-[0_10px_30px_rgba(157,192,139,0.3)] bg-primary-container/10">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bathtub</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="font-bold text-lg text-primary">$35</span>
+</div>
+</div>
+<h3 class="font-bold text-on-surface mb-1">Relaxing Bath &amp; Massage</h3>
+<p class="text-sm text-on-surface-variant">Organic shampoo bath with deep-tissue massage.</p>
+</div>
+<!-- Nail Trim -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-transparent hover:border-primary-container">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">auto_fix</span>
+</div>
+<span class="font-bold text-lg text-primary">$20</span>
+</div>
+<h3 class="font-bold text-on-surface mb-1">Nail Trim &amp; Pawdicure</h3>
+<p class="text-sm text-on-surface-variant">Smoothing rough edges and paw pad balm.</p>
+</div>
+<!-- De-shedding -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-transparent hover:border-primary-container">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">brush</span>
+</div>
+<span class="font-bold text-lg text-primary">$30</span>
+</div>
+<h3 class="font-bold text-on-surface mb-1">De-shedding Treatment</h3>
+<p class="text-sm text-on-surface-variant">Reduce shedding by up to 90% with specialized tools.</p>
+</div>
+<!-- Teeth Cleaning -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-transparent hover:border-primary-container">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">dentistry</span>
+</div>
+<span class="font-bold text-lg text-primary">$25</span>
+</div>
+<h3 class="font-bold text-on-surface mb-1">Teeth Cleaning</h3>
+<p class="text-sm text-on-surface-variant">Tartar removal and breath freshening spray.</p>
+</div>
+<!-- Aromatherapy -->
+<div class="glass-panel p-6 rounded-lg transition-all hover:translate-y-[-4px] cursor-pointer group border-2 border-transparent hover:border-primary-container">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary-container/30 rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">spa</span>
+</div>
+<span class="font-bold text-lg text-primary">$40</span>
+</div>
+<h3 class="font-bold text-on-surface mb-1">Aromatherapy Spa</h3>
+<p class="text-sm text-on-surface-variant">Calming lavender and eucalyptus essential oils.</p>
+</div>
+</div>
+</section>
+<!-- Step 3: Pick Date & Time -->
+<section>
+<div class="flex items-center space-x-4 mb-8">
+<span class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">3</span>
+<h2 class="text-2xl font-semibold text-on-surface">Pick Date &amp; Time</h2>
+</div>
+<div class="glass-panel p-8 rounded-lg antigravity-shadow">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold">March 2026</h3>
+<div class="flex space-x-2">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-2 text-center mb-10">
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Mon</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Tue</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Wed</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Thu</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Fri</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Sat</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pb-4">Sun</div>
+<!-- Empty days -->
+<div class="aspect-square flex items-center justify-center text-outline-variant">23</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant">24</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant">25</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant">26</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant">27</div>
+<div class="aspect-square flex items-center justify-center text-outline-variant">28</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">1</div>
+<!-- Week 1 -->
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">2</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">3</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">4</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">5</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">6</div>
+<div class="aspect-square flex items-center justify-center text-secondary font-bold">7</div> <!-- Booked -->
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">8</div>
+<!-- Week 2 (Selected Day 12) -->
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">9</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">10</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">11</div>
+<div class="aspect-square flex items-center justify-center bg-primary text-on-primary rounded-xl font-bold shadow-lg shadow-primary/30">12</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">13</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">14</div>
+<div class="aspect-square flex items-center justify-center text-on-surface hover:bg-primary-container/20 rounded-xl transition-colors cursor-pointer">15</div>
+</div>
+<div class="space-y-4">
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Available Time Slots</span>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-2 rounded-full border border-outline-variant hover:border-primary transition-all text-sm font-medium">09:00 AM</button>
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary shadow-lg shadow-primary/20 text-sm font-medium">10:30 AM</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant hover:border-primary transition-all text-sm font-medium">01:00 PM</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant hover:border-primary transition-all text-sm font-medium opacity-50 cursor-not-allowed">02:30 PM</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant hover:border-primary transition-all text-sm font-medium">04:00 PM</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (40%) -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Booking Summary Card -->
+<div class="glass-panel p-10 rounded-lg antigravity-shadow sticky top-32">
+<h3 class="text-2xl font-bold text-on-surface mb-8">Booking Summary</h3>
+<div class="space-y-6 mb-8">
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant/20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">pets</span>
+<span class="text-on-surface-variant">Selected Pet</span>
+</div>
+<span class="font-bold">Buddy</span>
+</div>
+<div class="flex justify-between items-start pb-4 border-b border-outline-variant/20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">spa</span>
+<span class="text-on-surface-variant">Service</span>
+</div>
+<div class="text-right">
+<p class="font-bold">Relaxing Bath &amp; Massage</p>
+<p class="text-sm text-primary font-medium">$35.00</p>
+</div>
+</div>
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant/20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+<span class="text-on-surface-variant">Appointment</span>
+</div>
+<div class="text-right">
+<p class="font-bold">March 12, 2026</p>
+<p class="text-sm text-on-surface-variant">10:30 AM</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl mb-10 space-y-2">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Subtotal</span>
+<span>$35.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant">Tax (5%)</span>
+<span>$1.75</span>
+</div>
+<div class="flex justify-between items-center pt-4 mt-2 border-t border-outline-variant/20">
+<span class="text-lg font-bold">Total</span>
+<span class="text-2xl font-black text-primary">$36.75</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary rounded-full font-bold text-lg hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/30 flex items-center justify-center space-x-3">
+<span>Confirm Booking</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<!-- Groomer Card Integrated -->
+<div class="mt-12 pt-8 border-t border-outline-variant/20">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Assigned Groomer</p>
+<div class="flex items-center space-x-4">
+<div class="w-14 h-14 rounded-full overflow-hidden">
+<img alt="Sarah Kim Groomer" class="w-full h-full object-cover" data-alt="professional portrait of a smiling young woman with dark hair in a wellness clinic environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZFHsE7A0gUSL7a3YB7BMfwG6s1OoaSW-a0DoNyfFRl4Mp2iL5obs5xC4c1KEWagcX9pIUHvFEW-Z8GzJkRu6E7cD1xYwVPk7vuJArc802y5oNrfeilGSVbD9LD-WPtNU1DSEQT8urMY57zoP47emCpr7dDdHgeURJp-Awv0B0YOB3g--fPCVBCT5oNciWLiG2eYojmSodLdWLNK7dzkBNsTKvVD1-euceNpB7v5MLeKB_H-lYktY4xImqNR0skS1OlTcGpvC8fJCj"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface leading-tight">Sarah Kim</h4>
+<div class="flex items-center text-xs text-on-surface-variant space-x-2 mt-1">
+<span class="flex items-center text-secondary">
+<span class="material-symbols-outlined text-xs mr-1" style="font-variation-settings: 'FILL' 1;">star</span> 4.9
+                                    </span>
+<span>•</span>
+<span>5 years exp.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full pt-20 pb-10 bg-[#F3F3F3] dark:bg-[#1A1C1C]">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 border-t border-emerald-900/5 max-w-screen-2xl mx-auto pt-10">
+<div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
+<div class="text-lg font-semibold text-emerald-900 mb-2">PETCare</div>
+<p class="text-sm font-['Inter'] text-emerald-800/60 max-w-xs text-center md:text-left">
+                    Your pet's wellness journey starts here. Providing world-class care since 2018.
+                </p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 mb-8 md:mb-0">
+<a class="text-emerald-800/60 hover:text-emerald-900 transition-colors text-sm font-['Inter']" href="#">Privacy Policy</a>
+<a class="text-emerald-800/60 hover:text-emerald-900 transition-colors text-sm font-['Inter']" href="#">Terms of Service</a>
+<a class="text-emerald-800/60 hover:text-emerald-900 transition-colors text-sm font-['Inter']" href="#">Sustainability</a>
+<a class="text-emerald-800/60 hover:text-emerald-900 transition-colors text-sm font-['Inter']" href="#">Contact</a>
+</div>
+<div class="text-sm font-['Inter'] text-emerald-800/60">
+                © 2024 PETCare Ethereal Sanctuary. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

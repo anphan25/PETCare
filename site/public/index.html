@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PETCare | Ethereal Sanctuary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#9dc08b",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed": "#c9edb5",
+              "on-secondary-fixed": "#3a090e",
+              "secondary-fixed": "#ffdad9",
+              "on-tertiary": "#ffffff",
+              "on-surface": "#1a1c1c",
+              "error-container": "#ffdad6",
+              "on-background": "#1a1c1c",
+              "tertiary": "#43682b",
+              "surface-dim": "#dadada",
+              "on-error": "#ffffff",
+              "surface": "#f9f9f9",
+              "inverse-on-surface": "#f1f1f1",
+              "surface-bright": "#f9f9f9",
+              "on-tertiary-fixed": "#0a2100",
+              "secondary-container": "#fca8a8",
+              "tertiary-container": "#98c27b",
+              "surface-container-highest": "#e2e2e2",
+              "primary": "#47663a",
+              "tertiary-fixed-dim": "#a8d38a",
+              "tertiary-fixed": "#c4efa3",
+              "on-primary-container": "#314f25",
+              "secondary-fixed-dim": "#ffb3b2",
+              "surface-container-low": "#f3f3f3",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#052100",
+              "outline": "#73796e",
+              "outline-variant": "#c3c8bc",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#add19a",
+              "inverse-primary": "#add19a",
+              "on-surface-variant": "#43483f",
+              "on-tertiary-fixed-variant": "#2c4f15",
+              "error": "#ba1a1a",
+              "on-primary": "#ffffff",
+              "on-tertiary-container": "#2d5016",
+              "background": "#f9f9f9",
+              "surface-tint": "#47663a",
+              "surface-container": "#eeeeee",
+              "on-primary-fixed-variant": "#304e24",
+              "secondary": "#8d4b4c",
+              "surface-container-high": "#e8e8e8",
+              "inverse-surface": "#2f3131",
+              "on-secondary-fixed-variant": "#713436"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .mesh-gradient {
+            background-color: #f9f9f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(157, 192, 139, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(237, 241, 214, 0.3) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(157, 192, 139, 0.1) 0px, transparent 50%);
+        }
+        .antigravity-shadow {
+            box-shadow: 0 40px 60px -10px rgba(26, 28, 28, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container mesh-gradient min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 px-8 py-4 bg-white/25 backdrop-blur-xl border-b border-white/50 shadow-[0_8px_32px_0_rgba(71,102,58,0.06)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto">
+<div class="flex items-center gap-2 text-xl font-bold text-[#47663A]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pets</span>
+                PETCare
+            </div>
+<div class="hidden md:flex items-center gap-8 font-['Inter'] tracking-tight text-sm font-medium">
+<a class="text-[#47663A] border-b-2 border-[#47663A] pb-1" href="#">Home</a>
+<a class="text-[#43483F] hover:text-[#47663A] transition-colors" href="#">Products</a>
+<a class="text-[#43483F] hover:text-[#47663A] transition-colors" href="#">Spa Booking</a>
+<a class="text-[#43483F] hover:text-[#47663A] transition-colors" href="#">Fashion</a>
+<a class="text-[#43483F] hover:text-[#47663A] transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/30 rounded-full transition-all duration-300 scale-95 active:scale-90">
+<span class="material-symbols-outlined text-[#47663A]">shopping_cart</span>
+</button>
+<button class="p-2 hover:bg-white/30 rounded-full transition-all duration-300 scale-95 active:scale-90">
+<span class="material-symbols-outlined text-[#47663A]">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="flex-grow pt-32 pb-20 px-8 max-w-7xl mx-auto w-full">
+<!-- Hero Section -->
+<section class="relative mb-24 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-2xl">
+<h1 class="text-6xl md:text-7xl font-bold tracking-tight text-on-tertiary-container mb-6 leading-tight">
+                    Pamper Your Pets with <span class="text-primary">Premium Care</span>
+</h1>
+<p class="text-xl text-on-surface-variant mb-10 leading-relaxed font-light">
+                    From gourmet food to luxury spa treatments, everything your pet deserves. Experience a sanctuary designed for wellness and joy.
+                </p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<button class="px-10 py-4 bg-primary text-on-primary rounded-full font-semibold hover:shadow-[0_0_20px_rgba(157,192,139,0.3)] transition-all duration-300 transform hover:-translate-y-1">
+                        Explore Now
+                    </button>
+<button class="px-10 py-4 glass-panel text-primary rounded-full font-semibold transition-all duration-300 hover:bg-white/40">
+                        View Menu
+                    </button>
+</div>
+</div>
+<div class="relative w-full md:w-1/2 flex justify-center">
+<!-- Floating Elements Decor -->
+<div class="absolute -top-10 -right-10 w-32 h-32 opacity-20 rotate-12">
+<span class="material-symbols-outlined text-primary text-8xl" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+</div>
+<div class="absolute bottom-0 -left-10 w-24 h-24 opacity-15 -rotate-12">
+<span class="material-symbols-outlined text-primary text-6xl" style="font-variation-settings: 'FILL' 1;">pets</span>
+</div>
+<div class="glass-panel p-4 rounded-xl antigravity-shadow transform rotate-3 hover:rotate-0 transition-transform duration-700">
+<img alt="Luxury Pet Spa" class="rounded-lg object-cover w-[400px] h-[500px]" data-alt="Happy golden retriever dog being pampered in a bright airy luxury pet spa setting with soft natural morning light and pastel green accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi5LBDO5vnBg_TbtY6Hvfc99V1kuvUJSEnqRDViCycJ446WXnwwmuPgd6xqo6wEZ5JY-8T5-7CsCRol4SMPM3du1QygWfiaSkKshLs3TG4PCpcexVB1WapRvu4ZXCo5O3RaMP96tUkCkBKkaqGwbDA-DLYFY9sf-UweXAgw5S5wckZHw2mhah3cIKN0iLjILneF_6IDydr7c1NwvDsPV9MC91fgh8FYUwtGr2hJyfc6XBd1SvRL_ia2-r_Kxqa_O-Qsgzn4LfsIISA"/>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<!-- Column 1: Premium Pet Food -->
+<section class="glass-panel p-8 rounded-lg antigravity-shadow flex flex-col gap-6">
+<div class="flex justify-between items-end mb-4">
+<div>
+<span class="text-xs uppercase tracking-widest text-primary font-bold">Nutrition</span>
+<h2 class="text-2xl font-bold text-on-tertiary-container mt-1">Premium Pet Food</h2>
+</div>
+<span class="material-symbols-outlined text-primary-container text-4xl opacity-50">restaurant</span>
+</div>
+<div class="space-y-4">
+<!-- Food Card 1 -->
+<div class="group relative bg-white/40 p-4 rounded-lg hover:bg-white/60 transition-all duration-300 border border-transparent hover:border-white/50">
+<div class="flex gap-4">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 antigravity-shadow">
+<img alt="Gourmet Pet Food" class="w-full h-full object-cover" data-alt="Close-up of premium gourmet dog food in a modern white ceramic bowl with salmon and herbs visual cues" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJeygR12Hm4PCBBg0jW9Ig7QMgieEFvhqEWwsyhLpItKbk-YkZNmsVFrqICU1KXqcdxf8Z28YALNNd8_YBt9dUMXdFcbmzS1DjXLbpMiT0RnmaT3eU3CYb--DCecbjru1Ne_Wj0xKA7DWfU7VUpHdeMIcjZRp2cVdj-88oAlBQp586fhFwQHR8SO4MRc8L8RzZ4DH6eMuYBUte2E3Ah1ohqwv4kEbsG0LxftwbVhhfCeTeA6aDAXNW85x83BAMRydq2er4VCnB6E4j"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-bold text-on-surface">Organic Salmon Feast</h3>
+<div class="flex text-primary text-xs mt-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<p class="text-primary font-bold mt-2">$24.99</p>
+</div>
+<button class="self-end p-2 bg-primary text-on-primary rounded-full hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Food Card 2 -->
+<div class="group relative bg-white/40 p-4 rounded-lg hover:bg-white/60 transition-all duration-300 border border-transparent hover:border-white/50">
+<div class="flex gap-4">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 antigravity-shadow">
+<img alt="Chicken Pet Food" class="w-full h-full object-cover" data-alt="Delicious farm fresh chicken chunks for pets with green garnish on a minimalist white plate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgSBrCCQMxK8Sm_9PrPr_TdhQyNbagp0hslW_TZHCgwK1wiR2WC5H8hp9l4g4-L3ztCBeDea1U1u3DzJUtWXsb_-QwskfW7FpkhN-LqljwFtkZ0cenVuiKSZEA4ojEFaAJjCnczBHvnupKPu9MEU_nZFZvySeHr7amsJmouYAcjZmjYvgU9q35gonijjyv9otYrC2Tw4il4YFOCuobAEmzowiLtDRXzhKADD4aTDKBYTCnpb3l1GyUvJZgf85klPxrPOpSvIrIzG99"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-bold text-on-surface">Farm Fresh Chicken</h3>
+<div class="flex text-primary text-xs mt-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+<p class="text-primary font-bold mt-2">$19.99</p>
+</div>
+<button class="self-end p-2 bg-primary text-on-primary rounded-full hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+<!-- Food Card 3 -->
+<div class="group relative bg-white/40 p-4 rounded-lg hover:bg-white/60 transition-all duration-300 border border-transparent hover:border-white/50">
+<div class="flex gap-4">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 antigravity-shadow">
+<img alt="Berry Mix" class="w-full h-full object-cover" data-alt="Healthy wild berry and grain mix for pets, artistic overhead shot with vibrant natural colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8DrlOVOBDpvne4UEV-UMQn1vZb0lc0ba5ZYLBZkGQYxVTjXbe24Ox6tzQIPkQDKzo0fJJeD1zrcWRqWzi3e_4IBBXzASR6J4SGzD8IaLEhZUfxn-x84ZI0aM6cK6Uc0fwUo1xomW5XfLHxgoTQPW3ylevotTr-hgwQfF906iwvhcyNlCyylNvXxPc86xg22EPBuHHNRagfiVaXLc1ymMaMyjFHedrTxYddmHwRDW_DhxnT_eAx5iOS0e0nwB4GZmPLSoAE4QTvsxw"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-bold text-on-surface">Wild Berry Mix</h3>
+<div class="flex text-primary text-xs mt-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star_outline</span>
+</div>
+<p class="text-primary font-bold mt-2">$15.99</p>
+</div>
+<button class="self-end p-2 bg-primary text-on-primary rounded-full hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full py-4 glass-panel text-primary font-bold rounded-full hover:bg-white/50 transition-all">View All Products</button>
+</section>
+<!-- Column 2: Pet Fashion -->
+<section class="glass-panel p-8 rounded-lg antigravity-shadow flex flex-col h-full">
+<div class="flex justify-between items-end mb-6">
+<div>
+<span class="text-xs uppercase tracking-widest text-primary font-bold">Style</span>
+<h2 class="text-2xl font-bold text-on-tertiary-container mt-1">Trendy Pet Fashion</h2>
+</div>
+<span class="material-symbols-outlined text-primary-container text-4xl opacity-50">apparel</span>
+</div>
+<div class="grid grid-cols-2 gap-4 flex-grow">
+<div class="group relative rounded-xl overflow-hidden antigravity-shadow">
+<img alt="Sweater" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Small dog wearing a cozy beige cable-knit sweater sitting on a soft blanket" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmpgy2X6UFbqKk-cLhv587VDclt-3-jmRwXadhWyoFyKxdf6lvaxJj8cjlX2dMfpdK7HpNuDkxuLYXgyeARPvCosoaJEHoUg6c2Nd_pySGmVPXSSnxAv6Q899GH_gJHLRmSbKxOSeDWH0Al8y9IFphxfqxn5dG_xHM5J4j2nhrGypUrbkw3l0zoo8qZhvRkevCOLjuXr2gaIJVKi_hkXI8AQAj2w3hfr75f6QhbFSOr0ZKHZt9ApIi8SWIF0cze1Uvi605b1NfvytM"/>
+<div class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full glass-panel">
+<span class="material-symbols-outlined text-secondary text-sm">favorite</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white text-xs font-medium">Cashmere Sweater</p>
+<p class="text-primary-container font-bold text-sm">$32.00</p>
+</div>
+</div>
+<div class="group relative rounded-xl overflow-hidden antigravity-shadow">
+<img alt="Bow Tie" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Sophisticated silk bow tie for pets in a rich forest green color sitting on a marble surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKMXDAdSOzLXqNdOGJ3H1PuF8o7Arb988eyh5E8wKbmXhOKZsvoFXA63bWIrqH-7HB-d9kIwtRTmGiDsIwqBll9edRGfLw-HgmPOYEiRhcZ31hP80jLivhs5ZwmKlZwMh8vrSFGFGISHXFLcE9LL1bWXxnDrbbZuBy7cTiXRX6z-BrNRjd-hTfXG3musq0jegmaXt0j0g_4AKKqfjOgcnxYFdk4JCC8Cq_F73G6q2nLaHYJLW2qdGyiJxTlXHAkXWqf08l77imy7jv"/>
+<div class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full glass-panel">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">favorite</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white text-xs font-medium">Silk Bow Tie</p>
+<p class="text-primary-container font-bold text-sm">$18.00</p>
+</div>
+</div>
+<div class="group relative rounded-xl overflow-hidden antigravity-shadow">
+<img alt="Bandana" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Golden retriever wearing a minimalist linen bandana with subtle leaf print patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE4-cCQshqmwKKxzuHIzDOwJD2PwxBbNPSYzP2Ww2xMG5F0X9Q8XfKyouCBMv7RIcypjVJErEPV_VDkpHWiNjFQGvdNoT-vf23780RZ8CoXhyteHuLWq6e-BaA9uQif1UrXjZYnpWhfY9IIiyhGgym5us46yARHuVHS2NOIEcHxyes0ozughW-04fLTEsDKYANru1jfYBeWgkMc_Jh8L8GdtT91Km23KhgtiOaz4EZQlU7wWHDUjiWa3h5nmznA4yiMYOgeXqazWZY"/>
+<div class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full glass-panel">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">favorite</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white text-xs font-medium">Linen Bandana</p>
+<p class="text-primary-container font-bold text-sm">$15.00</p>
+</div>
+</div>
+<div class="group relative rounded-xl overflow-hidden antigravity-shadow">
+<img alt="Boots" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Stylish protective pet boots in soft tan leather arranged neatly on a clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkc0qFHrkhh08KOZ_n9JAGszwtz23ZAlLflo7GQ2uafy3LmkU1o8v84jGmKdTrT6iYCV1yjD0IxbkkqW_dkqLVtQB0Fm338QmHLRaJMdm09OeAj-am2tGHwwenF2YGAiD2uhSi7saZ9OKTpMhkFZrJWTxL1G0EmQoQhG6teavSYv6NC4ssOHXy1KxfqPIz796VPFl_WqSWBZ6n3MtBGwN4SMMxWVIkiB9FICFne5S5DH4FZDLAUCvB41TKxVTCTJUErTlvH6wwbQ1j"/>
+<div class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full glass-panel">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">favorite</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent">
+<p class="text-white text-xs font-medium">Leather Walkers</p>
+<p class="text-primary-container font-bold text-sm">$45.00</p>
+</div>
+</div>
+</div>
+<button class="mt-8 w-full py-4 bg-primary text-on-primary font-bold rounded-full hover:shadow-lg transition-all">View Collection</button>
+</section>
+<!-- Column 3: Spa Booking -->
+<section class="glass-panel p-8 rounded-lg antigravity-shadow flex flex-col gap-6">
+<div class="flex justify-between items-end mb-4">
+<div>
+<span class="text-xs uppercase tracking-widest text-primary font-bold">Wellness</span>
+<h2 class="text-2xl font-bold text-on-tertiary-container mt-1">Luxury Spa &amp; Grooming</h2>
+</div>
+<span class="material-symbols-outlined text-primary-container text-4xl opacity-50">spa</span>
+</div>
+<!-- Calendar Widget -->
+<div class="bg-white/30 rounded-xl p-4 border border-white/50">
+<div class="flex justify-between items-center mb-4">
+<h4 class="font-bold text-on-tertiary-container">March 2026</h4>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-primary cursor-pointer">chevron_left</span>
+<span class="material-symbols-outlined text-primary cursor-pointer">chevron_right</span>
+</div>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center text-[10px] font-bold text-on-surface-variant mb-2">
+<span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+</div>
+<div class="grid grid-cols-7 gap-2 text-center">
+<span class="py-1 text-xs opacity-20">23</span><span class="py-1 text-xs opacity-20">24</span><span class="py-1 text-xs opacity-20">25</span><span class="py-1 text-xs opacity-20">26</span><span class="py-1 text-xs opacity-20">27</span><span class="py-1 text-xs opacity-20">28</span><span class="py-1 text-xs">1</span>
+<span class="py-1 text-xs">2</span><span class="py-1 text-xs bg-secondary-container text-on-secondary-container rounded-full">3</span><span class="py-1 text-xs">4</span><span class="py-1 text-xs">5</span><span class="py-1 text-xs bg-primary-container text-on-primary-container rounded-full font-bold">6</span><span class="py-1 text-xs">7</span><span class="py-1 text-xs">8</span>
+<span class="py-1 text-xs">9</span><span class="py-1 text-xs bg-primary-container text-on-primary-container rounded-full font-bold">10</span><span class="py-1 text-xs">11</span><span class="py-1 text-xs bg-secondary-container text-on-secondary-container rounded-full">12</span><span class="py-1 text-xs">13</span><span class="py-1 text-xs">14</span><span class="py-1 text-xs">15</span>
+</div>
+<div class="mt-4 flex gap-4 text-[10px] justify-center">
+<div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-primary-container"></div> Available</div>
+<div class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-secondary-container"></div> Booked</div>
+</div>
+</div>
+<!-- Services List -->
+<div class="space-y-3">
+<div class="flex justify-between items-center p-3 rounded-lg border border-primary/10 hover:border-primary/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">content_cut</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Full Grooming Package</p>
+<p class="text-[10px] text-on-surface-variant">Haircut, bath, nail trim</p>
+</div>
+</div>
+<p class="font-bold text-primary">$45</p>
+</div>
+<div class="flex justify-between items-center p-3 rounded-lg border border-primary/10 hover:border-primary/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Relaxing Bath &amp; Massage</p>
+<p class="text-[10px] text-on-surface-variant">Essential oils, gentle massage</p>
+</div>
+</div>
+<p class="font-bold text-primary">$35</p>
+</div>
+<div class="flex justify-between items-center p-3 rounded-lg border border-primary/10 hover:border-primary/40 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">back_hand</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Nail Trim &amp; Pawdicure</p>
+<p class="text-[10px] text-on-surface-variant">Grinding and moisturizing</p>
+</div>
+</div>
+<p class="font-bold text-primary">$20</p>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-full hover:shadow-lg transition-all">Book Appointment</button>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-white/10 backdrop-blur-md mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto gap-6">
+<div class="text-lg font-semibold text-[#47663A]">
+                PETCare
+            </div>
+<div class="flex flex-wrap justify-center gap-8 font-['Inter'] text-xs font-light tracking-wide">
+<a class="text-[#43483F] opacity-80 hover:opacity-100 hover:translate-y-[-2px] transition-transform duration-300" href="#">Privacy Policy</a>
+<a class="text-[#43483F] opacity-80 hover:opacity-100 hover:translate-y-[-2px] transition-transform duration-300" href="#">Terms of Service</a>
+<a class="text-[#43483F] opacity-80 hover:opacity-100 hover:translate-y-[-2px] transition-transform duration-300" href="#">Contact Us</a>
+<a class="text-[#43483F] opacity-80 hover:opacity-100 hover:translate-y-[-2px] transition-transform duration-300" href="#">Pet Care Tips</a>
+</div>
+<div class="font-['Inter'] text-xs font-light tracking-wide text-[#43483F] opacity-60">
+                © 2024 PETCare Ethereal Sanctuary. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

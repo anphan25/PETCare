@@ -1,0 +1,43 @@
+{
+  "name": "projects/17587434165337853117",
+  "projectId": "17587434165337853117",
+  "title": "PETCare - Premium Pet Services",
+  "visibility": "PRIVATE",
+  "createTime": "2026-03-24T13:30:06.276653Z",
+  "updateTime": "2026-03-24T13:30:06.276653Z",
+  "projectType": "PROJECT_DESIGN",
+  "origin": "STITCH",
+  "deviceType": "DESKTOP",
+  "designTheme": {
+    "colorMode": "LIGHT",
+    "font": "INTER",
+    "roundness": "ROUND_FULL",
+    "customColor": "#9DC08B",
+    "overridePrimaryColor": "#9DC08B",
+    "overrideSecondaryColor": "#E49393",
+    "overrideTertiaryColor": "#2D5016",
+    "overrideNeutralColor": "#F9F9F9",
+    "spacingScale": 3
+  },
+  "screens": {
+    "dashboard": {
+      "id": "38f6a553dfb1488da4518e5bd5fde534",
+      "sourceScreen": "projects/17587434165337853117/screens/38f6a553dfb1488da4518e5bd5fde534",
+      "x": 0,
+      "y": 0,
+      "width": 2560,
+      "height": 3310
+    },
+    "spa-booking": {
+      "id": "2fe806cd36e24964b6cbce9ba7e514d8",
+      "sourceScreen": "projects/17587434165337853117/screens/2fe806cd36e24964b6cbce9ba7e514d8",
+      "x": 2720,
+      "y": 0,
+      "width": 2560,
+      "height": 5010
+    }
+  },
+  "metadata": {
+    "userRole": "OWNER"
+  }
+}
