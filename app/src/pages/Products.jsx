@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { foodProducts } from '../data/products';
+import { useMascotStore } from '../stores/useMascotStore';
 
 const categories = ['All', 'Dog Food', 'Cat Food', 'Treats', 'Supplements'];
 
 export default function Products({ onAddToCart }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const filtered = activeCategory === 'All' ? foodProducts : foodProducts.filter(p => p.category === activeCategory);
+  const setWagging = useMascotStore((state) => state.setWagging);
+  const triggerJump = useMascotStore((state) => state.triggerJump);
 
   return (
     <div className="mesh-gradient min-h-screen">
@@ -58,6 +61,8 @@ export default function Products({ onAddToCart }) {
               exit={{ y: -20, opacity: 0 }}
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+              onMouseEnter={() => setWagging(true)}
+              onMouseLeave={() => setWagging(false)}
               className="glass-panel rounded-2xl overflow-hidden antigravity-shadow group cursor-pointer"
             >
               <div className="relative overflow-hidden">
@@ -92,7 +97,11 @@ export default function Products({ onAddToCart }) {
                   <motion.button
                     whileHover={{ scale: 1.15 }}
                     whileTap={{ scale: 0.85 }}
-                    onClick={() => onAddToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddToCart(product);
+                      triggerJump();
+                    }}
                     className="px-5 py-2 bg-sage-dark text-white rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg hover:shadow-sage/30 transition-shadow"
                   >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { spaServices, defaultPets, timeSlots, groomer } from '../data/products';
+import { useMascotStore } from '../stores/useMascotStore';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -18,6 +19,8 @@ export default function SpaBooking({ onBook }) {
   const [currentMonth, setCurrentMonth] = useState(2); // March (0-indexed)
   const [currentYear] = useState(2026);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const setWagging = useMascotStore((state) => state.setWagging);
+  const triggerJump = useMascotStore((state) => state.triggerJump);
 
   const bookedDates = [3, 7, 12, 21];
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);
@@ -53,6 +56,7 @@ export default function SpaBooking({ onBook }) {
     };
     onBook(booking);
     setBookingConfirmed(true);
+    triggerJump();
     setTimeout(() => setBookingConfirmed(false), 3000);
   };
 
@@ -136,6 +140,8 @@ export default function SpaBooking({ onBook }) {
                       transition={{ delay: i * 0.08 }}
                       whileHover={{ y: -4 }}
                       onClick={() => toggleService(service.id)}
+                      onMouseEnter={() => setWagging(true)}
+                      onMouseLeave={() => setWagging(false)}
                       className={`glass-panel p-6 rounded-2xl cursor-pointer group transition-all ${
                         isSelected
                           ? 'border-2 border-sage-dark bg-white/50 shadow-[0_20px_40px_rgba(157,192,139,0.25)]'

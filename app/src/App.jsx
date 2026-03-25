@@ -8,28 +8,44 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Fashion from './pages/Fashion';
 import SpaBooking from './pages/SpaBooking';
+import InteractiveMascot from './components/InteractiveMascot';
 import { useCart, useBookings } from './hooks/useStore';
 
 function AnimatedRoutes({ onAddToCart, onBook }) {
   const location = useLocation();
+  const showMascot = ['/products', '/fashion', '/spa'].includes(location.pathname);
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Routes location={location}>
-          <Route path="/" element={<Dashboard onAddToCart={onAddToCart} />} />
-          <Route path="/products" element={<Products onAddToCart={onAddToCart} />} />
-          <Route path="/fashion" element={<Fashion />} />
-          <Route path="/spa" element={<SpaBooking onBook={onBook} />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
+    <>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Routes location={location}>
+            <Route path="/" element={<Dashboard onAddToCart={onAddToCart} />} />
+            <Route path="/products" element={<Products onAddToCart={onAddToCart} />} />
+            <Route path="/fashion" element={<Fashion />} />
+            <Route path="/spa" element={<SpaBooking onBook={onBook} />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
+      <AnimatePresence>
+        {showMascot && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative z-[9999]"
+          >
+            <InteractiveMascot />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

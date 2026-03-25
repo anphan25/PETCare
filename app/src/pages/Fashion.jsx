@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { fashionItems } from '../data/products';
+import { useMascotStore } from '../stores/useMascotStore';
 
 const filterCategories = ['All', 'Clothing', 'Accessories', 'Footwear'];
 
@@ -8,6 +9,8 @@ export default function Fashion() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedItem, setSelectedItem] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const setWagging = useMascotStore((state) => state.setWagging);
+  const triggerJump = useMascotStore((state) => state.triggerJump);
 
   const filtered = activeFilter === 'All' ? fashionItems : fashionItems.filter(i => i.category === activeFilter);
 
@@ -60,6 +63,8 @@ export default function Fashion() {
               transition={{ delay: i * 0.08 }}
               whileHover={{ y: -10, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
               onClick={() => setSelectedItem(item)}
+              onMouseEnter={() => setWagging(true)}
+              onMouseLeave={() => setWagging(false)}
               className="glass-panel rounded-2xl overflow-hidden antigravity-shadow cursor-pointer group"
             >
               <div className="relative overflow-hidden">
@@ -156,7 +161,11 @@ export default function Fashion() {
                     </div>
 
                     <div className="flex gap-3">
-                      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1 py-4 btn-primary text-base flex items-center justify-center gap-2">
+                      <motion.button 
+                        whileHover={{ scale: 1.02 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => triggerJump()}
+                        className="flex-1 py-4 btn-primary text-base flex items-center justify-center gap-2">
                         <span className="material-symbols-outlined">shopping_bag</span>
                         Add to Bag
                       </motion.button>
