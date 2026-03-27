@@ -1,15 +1,47 @@
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useAuthStore } from '../stores/useAuthStore';
+import { supabase } from '../supabaseClient';
 
-export default function Navbar({ cartCount = 0, onCartClick }) {
+export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { user, profile } = useAuthStore();
+  const menuRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Clear UI instantly
+      setUserMenuOpen(false);
+      useAuthStore.getState().setUser(null);
+      useAuthStore.getState().setProfile(null);
+      
+      // Call Supabase sign out
+      await supabase.auth.signOut();
+      
+      // Full reload to clear any residual cache or listener issues
+      window.location.reload();
+    } catch (error) {
+      console.error('Error logging out:', error.message);
+    }
+  };
 
   const navItems = [
     { to: '/', label: 'Home' },
     { to: '/products', label: 'Products' },
     { to: '/spa', label: 'Spa Booking' },
-    { to: '/fashion', label: 'Fashion' },
   ];
 
   return (
@@ -68,9 +100,68 @@ export default function Navbar({ cartCount = 0, onCartClick }) {
             </AnimatePresence>
           </motion.button>
 
-          <button className="p-2 hover:bg-white/30 rounded-full transition-all">
-            <span className="material-symbols-outlined text-sage-dark">account_circle</span>
-          </button>
+          <div className="relative" ref={menuRef}>
+            <button 
+              onClick={() => user ? setUserMenuOpen(!userMenuOpen) : onAuthClick()}
+              className="p-2 hover:bg-white/30 rounded-full transition-all flex items-center gap-2"
+            >
+              {user ? (
+                <>
+                  <img 
+                    src={profile?.avatar_url || user.user_metadata?.avatar_url} 
+                    alt="Avatar" 
+                    className="w-7 h-7 rounded-full border border-sage-dark/30 object-cover" 
+                  />
+                  {userMenuOpen ? (
+                    <span className="material-symbols-outlined text-sm text-sage-dark">expand_less</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-sm text-sage-dark">expand_more</span>
+                  )}
+                </>
+              ) : (
+                <span className="material-symbols-outlined text-sage-dark">account_circle</span>
+              )}
+            </button>
+
+            {/* User Dropdown Menu */}
+            <AnimatePresence>
+              {user && userMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-3 w-56 rounded-2xl glass-panel-strong border border-white/50 overflow-hidden shadow-2xl z-50 py-2"
+                >
+                  <div className="px-4 py-3 border-b border-white/20">
+                    <p className="text-sm font-bold text-forest truncate">{profile?.full_name || user.user_metadata?.full_name}</p>
+                    <p className="text-xs text-surface-variant truncate">{user.email}</p>
+                  </div>
+                  
+                  <div className="py-2">
+                    <button className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                      <span className="material-symbols-outlined text-[18px] text-sage">person</span>
+                      My Profile
+                    </button>
+                    <button className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                      <span className="material-symbols-outlined text-[18px] text-sage">event_note</span>
+                      My Bookings
+                    </button>
+                  </div>
+                  
+                  <div className="border-t border-white/20 py-2">
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-earth-rose font-bold hover:bg-earth-rose/10 flex items-center gap-3 transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">logout</span>
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Mobile Menu Toggle */}
           <button

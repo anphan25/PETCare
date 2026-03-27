@@ -70,29 +70,29 @@ export default function SpaBooking({ onBook }) {
 
       <main className="relative pt-32 pb-20 px-6 max-w-screen-2xl mx-auto overflow-hidden">
         {/* Page Header */}
-        <header className="relative mb-20 text-center md:text-left z-10">
+        <header className="relative mb-12 sm:mb-20 text-center md:text-left z-10">
           <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
             <div className="inline-flex items-center space-x-2 mb-4">
               <span className="material-symbols-outlined text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
-              <span className="text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
+              <span className="text-xs sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-forest tracking-tight mb-6">Luxury Spa & Grooming</h1>
-            <p className="text-xl text-surface-variant max-w-2xl leading-relaxed">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-forest tracking-tight mb-6 leading-[1.1]">Luxury Spa & Grooming</h1>
+            <p className="text-lg sm:text-xl text-surface-variant max-w-2xl leading-relaxed mx-auto md:mx-0">
               Give your pet the royal treatment they deserve. From organic chamomile baths to precision styling, book a pampering session today.
             </p>
           </motion.div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
           {/* Left Column (60%) */}
-          <div className="lg:col-span-7 space-y-16">
+          <div className="lg:col-span-7 space-y-12 sm:space-y-16">
             {/* Step 1: Select Your Pet */}
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
-              <div className="flex items-center space-x-4 mb-8">
-                <span className="w-10 h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 bg-primary">1</span>
-                <h2 className="text-2xl font-semibold text-charcoal">Select Your Pet</h2>
+              <div className="flex items-center space-x-4 mb-6 sm:mb-8">
+                <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">1</span>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Select Your Pet</h2>
               </div>
-              <div className="glass-panel p-8 rounded-2xl antigravity-shadow flex flex-wrap gap-6">
+              <div className="glass-panel p-6 sm:p-8 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-6">
                 {defaultPets.map(pet => {
                   const isSelected = selectedPet.id === pet.id;
                   return (
@@ -101,34 +101,34 @@ export default function SpaBooking({ onBook }) {
                       whileHover={{ y: -4 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedPet(pet)}
-                      className={`flex flex-col items-center p-4 rounded-xl cursor-pointer transition-all shadow-lg ${
+                      className={`flex flex-col items-center p-3 sm:p-4 rounded-xl cursor-pointer transition-all shadow-lg min-w-[100px] flex-1 sm:flex-none ${
                         isSelected
                           ? 'bg-white/40 border-2 border-sage-dark'
                           : 'bg-white/20 border-2 border-transparent hover:bg-white/40'
                       }`}
                     >
-                      <div className={`w-20 h-20 rounded-full overflow-hidden mb-3 ${isSelected ? 'ring-4 ring-sage-dark/20' : ''}`}>
+                      <div className={`w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden mb-3 ${isSelected ? 'ring-4 ring-sage-dark/20' : ''}`}>
                         <img alt={pet.name} className="w-full h-full object-cover" src={pet.image} />
                       </div>
-                      <span className="font-bold text-charcoal">{pet.name}</span>
-                      <span className="text-xs text-surface-variant">{pet.age} • {pet.breed}</span>
+                      <span className="font-bold text-charcoal text-sm sm:text-base">{pet.name}</span>
+                      <span className="text-[10px] sm:text-xs text-surface-variant text-center">{pet.age} • {pet.breed}</span>
                     </motion.div>
                   );
                 })}
-                <button className="flex flex-col items-center justify-center p-4 w-32 h-36 rounded-xl border-2 border-dashed border-outline-variant hover:border-sage-dark hover:bg-white/30 hover:text-sage-dark transition-all group">
-                  <span className="material-symbols-outlined text-3xl mb-2 group-hover:scale-110 transition-transform">add_circle</span>
-                  <span className="text-sm font-medium">Add Pet</span>
+                <button className="flex flex-col items-center justify-center p-3 sm:p-4 w-full sm:w-32 h-24 sm:h-36 rounded-xl border-2 border-dashed border-outline-variant hover:border-sage-dark hover:bg-white/30 hover:text-sage-dark transition-all group">
+                  <span className="material-symbols-outlined text-2xl sm:text-3xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">add_circle</span>
+                  <span className="text-xs sm:text-sm font-medium">Add Pet</span>
                 </button>
               </div>
             </motion.section>
 
             {/* Step 2: Choose Services */}
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
-              <div className="flex items-center space-x-4 mb-8">
-                <span className="w-10 h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 bg-primary">2</span>
-                <h2 className="text-2xl font-semibold text-charcoal">Choose Services</h2>
+              <div className="flex items-center space-x-4 mb-6 sm:mb-8">
+                <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">2</span>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Choose Services</h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {spaServices.map((service, i) => {
                   const isSelected = selectedServices.includes(service.id);
                   return (
@@ -142,23 +142,36 @@ export default function SpaBooking({ onBook }) {
                       onClick={() => toggleService(service.id)}
                       onMouseEnter={() => setWagging(true)}
                       onMouseLeave={() => setWagging(false)}
-                      className={`glass-panel p-6 rounded-2xl cursor-pointer group transition-all ${
+                      className={`glass-panel p-5 sm:p-6 rounded-2xl cursor-pointer group transition-all relative ${
                         isSelected
-                          ? 'border-2 border-sage-dark bg-white/50 shadow-[0_20px_40px_rgba(157,192,139,0.25)]'
+                          ? 'border-2 border-sage-dark bg-white/60 shadow-[0_20px_40px_rgba(157,192,139,0.35)] scale-[1.02] ring-4 ring-sage-dark/5'
                           : 'border border-white/40 hover:border-sage shadow-sm hover:shadow-xl'
                       }`}
                     >
+                      {isSelected && (
+                        <motion.div 
+                          initial={{ scale: 0, rotate: -45 }} 
+                          animate={{ scale: 1, rotate: 0 }} 
+                          className="absolute -top-3 -right-3 w-8 h-8 bg-sage-dark text-white rounded-full flex items-center justify-center shadow-lg border-2 border-white z-20"
+                        >
+                          <span className="material-symbols-outlined text-sm font-bold">check</span>
+                        </motion.div>
+                      )}
+                      
                       <div className="flex justify-between items-start mb-4">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sage-dark ${isSelected ? 'bg-sage/50' : 'bg-sage/40 group-hover:scale-110 transition-transform'}`}>
-                          <span className="material-symbols-outlined" style={isSelected ? { fontVariationSettings: "'FILL' 1" } : {}}>{service.icon}</span>
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                          isSelected 
+                            ? 'bg-sage-dark text-white shadow-lg shadow-sage-dark/30 scale-110' 
+                            : 'bg-sage/40 text-sage-dark group-hover:scale-110'
+                        }`}>
+                          <span className="material-symbols-outlined text-xl sm:text-2xl" style={isSelected ? { fontVariationSettings: "'FILL' 1" } : {}}>{service.icon}</span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          {isSelected && <span className="material-symbols-outlined text-sage-dark text-sm">check_circle</span>}
-                          <span className="font-bold text-lg text-sage-dark">${service.price}</span>
+                        <div className="flex items-center">
+                          <span className={`font-black text-base sm:text-xl transition-colors ${isSelected ? 'text-sage-dark' : 'text-sage-dark/70'}`}>${service.price}</span>
                         </div>
                       </div>
-                      <h3 className="font-bold text-charcoal mb-1">{service.name}</h3>
-                      <p className="text-sm text-surface-variant">{service.description}</p>
+                      <h3 className={`font-bold mb-1 text-sm sm:text-base transition-colors ${isSelected ? 'text-charcoal' : 'text-charcoal/80'}`}>{service.name}</h3>
+                      <p className={`text-xs sm:text-sm leading-relaxed transition-colors ${isSelected ? 'text-charcoal/70' : 'text-surface-variant'}`}>{service.description}</p>
                     </motion.div>
                   );
                 })}
@@ -167,32 +180,32 @@ export default function SpaBooking({ onBook }) {
 
             {/* Step 3: Pick Date & Time */}
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
-              <div className="flex items-center space-x-4 mb-8">
-                <span className="w-10 h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 bg-primary">3</span>
-                <h2 className="text-2xl font-semibold text-charcoal">Pick Date & Time</h2>
+              <div className="flex items-center space-x-4 mb-6 sm:mb-8">
+                <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">3</span>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Pick Date & Time</h2>
               </div>
-              <div className="glass-panel p-8 rounded-2xl antigravity-shadow">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-xl font-bold">{monthNames[currentMonth]} {currentYear}</h3>
-                  <div className="flex space-x-2">
-                    <button onClick={() => setCurrentMonth(m => Math.max(0, m - 1))} className="p-2 hover:bg-white/30 rounded-full transition-colors">
+              <div className="glass-panel p-5 sm:p-8 rounded-2xl antigravity-shadow">
+                <div className="flex justify-between items-center mb-6 sm:mb-8">
+                  <h3 className="text-lg sm:text-xl font-bold">{monthNames[currentMonth]} {currentYear}</h3>
+                  <div className="flex space-x-1 sm:space-x-2">
+                    <button onClick={() => setCurrentMonth(m => Math.max(0, m - 1))} className="p-1 sm:p-2 hover:bg-white/30 rounded-full transition-colors">
                       <span className="material-symbols-outlined">chevron_left</span>
                     </button>
-                    <button onClick={() => setCurrentMonth(m => Math.min(11, m + 1))} className="p-2 hover:bg-white/30 rounded-full transition-colors">
+                    <button onClick={() => setCurrentMonth(m => Math.min(11, m + 1))} className="p-1 sm:p-2 hover:bg-white/30 rounded-full transition-colors">
                       <span className="material-symbols-outlined">chevron_right</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Day Headers */}
-                <div className="grid grid-cols-7 gap-2 text-center mb-4">
+                <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center mb-4">
                   {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => (
-                    <div key={d} className="text-xs font-bold text-surface-variant uppercase tracking-widest pb-2">{d}</div>
+                    <div key={d} className="text-[10px] sm:text-xs font-bold text-surface-variant uppercase tracking-tighter sm:tracking-widest pb-2">{d}</div>
                   ))}
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-2 text-center mb-10">
+                <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center mb-10">
                   {calendarDays.map((d, i) => {
                     const isBooked = d.current && bookedDates.includes(d.day);
                     const isSelected = d.current && selectedDate === d.day;
@@ -200,7 +213,7 @@ export default function SpaBooking({ onBook }) {
                       <div
                         key={i}
                         onClick={() => d.current && !isBooked && setSelectedDate(d.day)}
-                        className={`aspect-square flex items-center justify-center transition-colors rounded-xl ${
+                        className={`aspect-square flex items-center justify-center transition-colors rounded-lg sm:rounded-xl text-xs sm:text-base ${
                           !d.current ? 'text-outline-variant/40' :
                           isSelected ? 'bg-sage-dark text-white font-bold shadow-lg shadow-sage-dark/30 cursor-pointer' :
                           isBooked ? 'text-earth-rose font-bold cursor-not-allowed' :
@@ -215,8 +228,8 @@ export default function SpaBooking({ onBook }) {
 
                 {/* Time Slots */}
                 <div className="space-y-4">
-                  <span className="text-sm font-bold text-surface-variant uppercase tracking-widest">Available Time Slots</span>
-                  <div className="flex flex-wrap gap-3">
+                  <span className="text-[10px] sm:text-sm font-bold text-surface-variant uppercase tracking-widest">Available Time Slots</span>
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
                     {timeSlots.map(slot => {
                       const isDisabled = slot === '02:30 PM';
                       return (
@@ -224,7 +237,7 @@ export default function SpaBooking({ onBook }) {
                           key={slot}
                           onClick={() => !isDisabled && setSelectedTime(slot)}
                           disabled={isDisabled}
-                          className={`px-6 py-2 rounded-full transition-all text-sm font-medium ${
+                          className={`px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition-all text-xs sm:text-sm font-medium ${
                             selectedTime === slot
                               ? 'bg-sage-dark text-white shadow-lg shadow-sage-dark/20'
                               : isDisabled
@@ -243,73 +256,73 @@ export default function SpaBooking({ onBook }) {
           </div>
 
           {/* Right Column (40%) */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="md:col-span-1 lg:col-span-5 space-y-8">
             {/* Booking Summary Card */}
             <motion.div
               initial={{ y: 40, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="glass-panel p-10 rounded-2xl antigravity-shadow sticky top-32"
+              className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow sticky top-24 sm:top-32"
             >
-              <h3 className="text-2xl font-bold text-charcoal mb-8">Booking Summary</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">Booking Summary</h3>
               
-              <div className="space-y-6 mb-8">
+              <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
                 <div className="flex justify-between items-center pb-4 border-b border-white/30">
                   <div className="flex items-center space-x-3">
-                    <span className="material-symbols-outlined text-sage-dark">pets</span>
-                    <span className="text-surface-variant">Selected Pet</span>
+                    <span className="material-symbols-outlined text-sage-dark text-xl sm:text-2xl">pets</span>
+                    <span className="text-xs sm:text-sm text-surface-variant">Selected Pet</span>
                   </div>
-                  <span className="font-bold">{selectedPet.name}</span>
+                  <span className="font-bold text-sm sm:text-base">{selectedPet.name}</span>
                 </div>
                 
                 <div className="flex justify-between items-start pb-4 border-b border-white/30">
                   <div className="flex items-center space-x-3">
-                    <span className="material-symbols-outlined text-sage-dark">spa</span>
-                    <span className="text-surface-variant">Services</span>
+                    <span className="material-symbols-outlined text-sage-dark text-xl sm:text-2xl">spa</span>
+                    <span className="text-xs sm:text-sm text-surface-variant">Services</span>
                   </div>
                   <div className="text-right">
                     {selectedServiceDetails.length > 0 ? selectedServiceDetails.map(s => (
                       <div key={s.id}>
-                        <p className="font-bold">{s.name}</p>
-                        <p className="text-sm text-sage-dark font-medium">${s.price.toFixed(2)}</p>
+                        <p className="font-bold text-sm sm:text-base">{s.name}</p>
+                        <p className="text-[10px] sm:text-sm text-sage-dark font-medium">${s.price.toFixed(2)}</p>
                       </div>
                     )) : (
-                      <p className="text-sm text-outline italic">No services selected</p>
+                      <p className="text-xs sm:text-sm text-outline italic">No services selected</p>
                     )}
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center pb-4 border-b border-white/30">
                   <div className="flex items-center space-x-3">
-                    <span className="material-symbols-outlined text-sage-dark">calendar_month</span>
-                    <span className="text-surface-variant">Appointment</span>
+                    <span className="material-symbols-outlined text-sage-dark text-xl sm:text-2xl">calendar_month</span>
+                    <span className="text-xs sm:text-sm text-surface-variant">Appointment</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold">{monthNames[currentMonth]} {selectedDate}, {currentYear}</p>
-                    <p className="text-sm text-surface-variant">{selectedTime}</p>
+                    <p className="font-bold text-sm sm:text-base">{monthNames[currentMonth]} {selectedDate}, {currentYear}</p>
+                    <p className="text-[10px] sm:text-sm text-surface-variant">{selectedTime}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/40 p-6 rounded-xl mb-10 space-y-2 border border-white/40 shadow-inner">
-                <div className="flex justify-between items-center text-sm">
+              <div className="bg-white/40 p-5 sm:p-6 rounded-xl mb-8 sm:mb-10 space-y-2 border border-white/40 shadow-inner">
+                <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-surface-variant">Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm">
+                <div className="flex justify-between items-center text-xs sm:text-sm">
                   <span className="text-surface-variant">Tax (5%)</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between items-center pt-4 mt-2 border-t border-white/40">
-                  <span className="text-lg font-bold">Total</span>
-                  <span className="text-2xl font-black text-sage-dark">${total.toFixed(2)}</span>
+                <div className="flex justify-between items-center pt-3 sm:pt-4 mt-2 border-t border-white/40">
+                  <span className="text-base sm:text-lg font-bold">Total</span>
+                  <span className="text-xl sm:text-2xl font-black text-sage-dark">${total.toFixed(2)}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleConfirm}
                 disabled={selectedServices.length === 0}
-                className={`w-full py-4 rounded-full font-bold text-lg flex items-center justify-center space-x-3 transition-all ${
+                className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all ${
                   selectedServices.length > 0
                     ? 'bg-sage-dark text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-sage-dark/30'
                     : 'bg-outline-variant/30 text-outline cursor-not-allowed'
@@ -318,6 +331,7 @@ export default function SpaBooking({ onBook }) {
                 <span>Confirm Booking</span>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
+
 
               {/* Groomer Card Integrated */}
               <div className="mt-12 pt-8 border-t border-white/40">
@@ -350,7 +364,7 @@ export default function SpaBooking({ onBook }) {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[80] glass-panel-strong px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-80 glass-panel-strong px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3"
           >
             <span className="material-symbols-outlined text-sage-dark text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
             <div>
