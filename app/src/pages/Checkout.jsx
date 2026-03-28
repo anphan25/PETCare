@@ -2,12 +2,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { useCart } from '../hooks/useStore';
 import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function Checkout() {
   const { cart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [activeDelivery, setActiveDelivery] = useState('standard');
-  const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [confettiItems] = useState(() => {
     return [...Array(20)].map(() => ({
@@ -33,17 +34,97 @@ export default function Checkout() {
 
 
 
-  const handlePlaceOrder = () => {
-    setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
+  const { user, setLoading, loading } = useAuthStore();
+  const [formData, setFormData] = useState({
+    fullName: '',
+    address: '',
+    city: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePlaceOrder = async () => {
+    console.log("Preparing to place order...");
+    console.log("Current User:", user);
+    console.log("Form Data:", formData);
+
+    if (!user) {
+      alert("Please sign in to complete your sanctuary order.");
+      return;
+    }
+
+    if (!formData.fullName || !formData.address || !formData.city) {
+      alert("Please fill in all shipping details for your pet's delivery.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const orderPayload = {
+        user_id: user.id,
+        total_amount: Number(grandTotal.toFixed(2)),
+        status: 'pending',
+        shipping_address: `${formData.fullName}, ${formData.address}, ${formData.city}`
+      };
+      
+      console.log("1. Calling Supabase Insert Orders:", orderPayload);
+
+      // 1. Insert into 'orders'
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert(orderPayload)
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Supabase Order Insert Error:', orderError);
+        throw orderError;
+      }
+      
+      console.log("Order successfully created:", orderData);
+
+      // 2. Prepare 'order_details'
+      // UUID length is 36. Ensures we only pass valid UUIDs if products come from DB. 
+      const orderDetails = cart.map(item => ({
+        order_id: orderData.id,
+        product_id: (item.id && item.id.length >= 32) ? item.id : null, 
+        quantity: Number(item.quantity),
+        unit_price: Number(item.price)
+      }));
+
+      console.log("2. Calling Supabase Insert Order Details:", orderDetails);
+
+      // 3. Insert into 'order_details'
+      const { error: detailsError } = await supabase
+        .from('order_details')
+        .insert(orderDetails);
+
+      if (detailsError) {
+        console.error('Supabase Details Insert Error:', detailsError);
+        throw detailsError;
+      }
+
+      console.log("Order Details successfully inserted.");
+
+      // Update UI
+      setLoading(false);
       setShowSuccess(true);
+      clearCart();
+      
       setTimeout(() => {
         clearCart();
-        navigate('/');
+        navigate('/orders');
       }, 4000);
-    }, 2000);
+
+    } catch (error) {
+      console.error('Checkout Transaction Error:', error);
+      alert(`Sanctuary API Error: ${error.message || "Could not complete order. Please try again."}`);
+      setLoading(false);
+    }
   };
 
   if (cart.length === 0 && !showSuccess) {
@@ -109,21 +190,42 @@ export default function Checkout() {
                 <div className="col-span-1 md:col-span-2 space-y-2">
                   <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Full Sanctuary Name</label>
                   <div className="relative">
-                    <input type="text" placeholder="e.g. Luna Lovegood" className="checkout-input h-14 pl-12 peer" />
+                    <input 
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      type="text" 
+                      placeholder="e.g. Luna Lovegood" 
+                      className="checkout-input h-14 pl-12 peer" 
+                    />
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-sage-dark/60 peer-hover:text-sage peer-focus:text-sage transition-all duration-300 text-[20px] pointer-events-none">person</span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Delivery Address</label>
                   <div className="relative">
-                    <input type="text" placeholder="123 Harmony Lane" className="checkout-input h-14 pl-12 peer" />
+                    <input 
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      type="text" 
+                      placeholder="123 Harmony Lane" 
+                      className="checkout-input h-14 pl-12 peer" 
+                    />
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-sage-dark/60 peer-hover:text-sage peer-focus:text-sage transition-all duration-300 text-[20px] pointer-events-none">home</span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Forest City</label>
                   <div className="relative">
-                    <input type="text" placeholder="Evergreen Valley" className="checkout-input h-14 pl-12 peer" />
+                    <input 
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      type="text" 
+                      placeholder="Evergreen Valley" 
+                      className="checkout-input h-14 pl-12 peer" 
+                    />
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-sage-dark/60 peer-hover:text-sage peer-focus:text-sage transition-all duration-300 text-[20px] pointer-events-none">location_city</span>
                   </div>
                 </div>
@@ -285,17 +387,17 @@ export default function Checkout() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handlePlaceOrder}
-                disabled={isProcessing}
-                className="w-full py-5 btn-primary rounded-2xl text-xl flex items-center justify-center gap-3 relative overflow-hidden group shadow-[0_20px_40px_rgba(157,192,139,0.3)]"
+                disabled={loading || !formData.fullName || !formData.address || !formData.city}
+                className="w-full py-5 btn-primary rounded-2xl text-xl flex items-center justify-center gap-3 relative overflow-hidden group shadow-[0_20px_40px_rgba(157,192,139,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
               >
-                {isProcessing ? (
+                {loading ? (
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
                     <span>Processing...</span>
                   </div>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined text-white transition-transform group-hover:rotate-12">lock</span>
+                    <span className="material-symbols-outlined text-white transition-transform group-hover:rotate-12">auto_awesome</span>
                     Place Order Now
                   </>
                 )}
@@ -324,11 +426,10 @@ export default function Checkout() {
               <div className="w-20 h-20 bg-sage-dark text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                 <span className="material-symbols-outlined text-4xl font-black">check</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-forest mb-4 tracking-tight">Order Captured!</h2>
-              <p className="text-surface-variant text-lg leading-relaxed mb-8">Your pet's wellness journey has officially begun. We've sent a spiritual confirmation to your inbox.</p>
-              <div className="flex items-center justify-center gap-2 text-sage-dark font-bold text-sm uppercase tracking-widest">
+              <h2 className="text-3xl sm:text-4xl font-black text-forest mb-6 tracking-tight">Place Order Successfully</h2>
+              <div className="flex items-center justify-center gap-2 text-sage-dark font-bold text-sm uppercase tracking-widest mt-4">
                 <span className="w-2 h-2 rounded-full bg-sage-dark animate-ping" />
-                Returning to sanctuary...
+                Redirect to order history...
               </div>
             </motion.div>
             

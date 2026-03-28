@@ -1,8 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
 import { useMascotStore } from '../stores/useMascotStore';
 import { useAuthStore } from '../stores/useAuthStore';
-import { supabase } from '../supabaseClient';
 
 const sortOptions = [
   { label: 'Recommended', value: 'default' },
@@ -106,9 +106,9 @@ const dummyData = [
 const ITEMS_PER_PAGE = 50;
 
 export default function Products({ onAddToCart }) {
-  const [allProducts, setAllProducts] = useState(dummyData);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [allProducts] = useState(dummyData);
+  const [loading] = useState(false);
+  const [error] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -118,7 +118,6 @@ export default function Products({ onAddToCart }) {
   const [favorites, setFavorites] = useState([]);
   const [isSortOpen, setIsSortOpen] = useState(false);
   
-  const isAuthLoading = useAuthStore((state) => state.isLoading);
 
   // Fetch Products from Supabase
   // useEffect(() => {
@@ -168,6 +167,28 @@ export default function Products({ onAddToCart }) {
 
   const toggleFav = (id) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+  };
+
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+    
+    // Get starting position
+    const btnRect = e.currentTarget.getBoundingClientRect();
+    const startPos = { 
+      x: btnRect.left + btnRect.width / 2 - 24,
+      y: btnRect.top + btnRect.height / 2 - 24 
+    };
+
+    // Dispatch custom event for the global animation handler in App.jsx
+    window.dispatchEvent(new CustomEvent('fly-to-cart', {
+      detail: { 
+        startPos, 
+        image: product.image_url || product.image 
+      }
+    }));
+
+    onAddToCart(product);
+    triggerJump();
   };
 
   const processedProducts = useMemo(() => {
@@ -433,11 +454,7 @@ export default function Products({ onAddToCart }) {
                     <motion.button
                       whileHover={{ scale: 1.15 }}
                       whileTap={{ scale: 0.85 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToCart(product);
-                        triggerJump();
-                      }}
+                      onClick={(e) => handleAddToCart(e, product)}
                       className="px-4 py-2 bg-sage-dark text-white rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg hover:shadow-sage/30 transition-shadow"
                     >
                       <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
@@ -572,9 +589,8 @@ export default function Products({ onAddToCart }) {
                       <motion.button 
                         whileHover={{ scale: 1.02 }} 
                         whileTap={{ scale: 0.98 }} 
-                        onClick={() => {
-                          onAddToCart(selectedItem);
-                          triggerJump();
+                        onClick={(e) => {
+                          handleAddToCart(e, selectedItem);
                           setSelectedItem(null);
                         }}
                         className="flex-1 py-3 sm:py-4 btn-primary text-sm sm:text-base flex items-center justify-center gap-2 rounded-2xl">

@@ -13,7 +13,9 @@ export const useMascotStore = create<MascotState>((set) => ({
   setWagging: (wagging) => set({ isWagging: wagging }),
   triggerJump: () => {
     set({ isJumping: true, isWagging: true });
-    setTimeout(() => set({ isJumping: false }), 700); // Nhảy trong 0.7s
-    setTimeout(() => set({ isWagging: false }), 2000); // 2s cúp đuôi
+    // Reset jump after 0.7s
+    setTimeout(() => set({ isJumping: false }), 700); 
+    // Reset wagging after 2s
+    setTimeout(() => set({ isWagging: false }), 2000); 
   }
 }));

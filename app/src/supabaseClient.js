@@ -4,7 +4,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://oiabrlpuqkwmsp
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_1aSVYhXG-cMYSU2hh03iSQ_d3Rlc7Sv';
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error("LỖI NẶNG: Không tìm thấy Key Supabase. Kiểm tra lại file .env!");
+  console.error("CRITICAL ERROR: Supabase credentials not found. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file!");
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey);

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
@@ -20,6 +20,15 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const [isBumped, setIsBumped] = useState(false);
+
+  useEffect(() => {
+    if (cartCount === 0) return;
+    setIsBumped(true);
+    const timer = setTimeout(() => setIsBumped(false), 300);
+    return () => clearTimeout(timer);
+  }, [cartCount]);
 
   const handleLogout = async () => {
     try {
@@ -81,6 +90,9 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
         {/* Actions */}
         <div className="flex items-center gap-1 sm:gap-3 shrink-0">
           <motion.button
+            id="cart-icon-container"
+            animate={{ scale: isBumped ? [1, 1.4, 1] : 1 }}
+            transition={{ duration: 0.4 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onCartClick}
@@ -104,21 +116,28 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
           <div className="relative" ref={menuRef}>
             <button 
               onClick={() => user ? setUserMenuOpen(!userMenuOpen) : onAuthClick()}
-              className="p-1.5 sm:p-2 hover:bg-white/30 rounded-full transition-all flex items-center gap-1 sm:gap-2"
+              className={`transition-all flex items-center gap-2 ${
+                user 
+                  ? 'p-1.5 sm:p-2 hover:bg-white/30 rounded-full' 
+                  : 'px-4 py-2 bg-sage-dark text-white rounded-xl font-bold text-sm shadow-lg shadow-sage-dark/20 hover:scale-105 active:scale-95'
+              }`}
             >
               {user ? (
                 <>
                   <img 
                     src={profile?.avatar_url || user.user_metadata?.avatar_url} 
                     alt="Avatar" 
-                    className="w-7 h-7 sm:w-8 h-8 rounded-full border border-sage-dark/30 object-cover" 
+                    className="w-8 h-8 rounded-full border border-sage-dark/30 object-cover" 
                   />
                   <span className="material-symbols-outlined text-sm text-sage-dark hidden sm:inline">
                     {userMenuOpen ? 'expand_less' : 'expand_more'}
                   </span>
                 </>
               ) : (
-                <span className="material-symbols-outlined text-sage-dark text-[22px] sm:text-[24px]">account_circle</span>
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[20px]">login</span>
+                  <span className="tracking-tight">Login</span>
+                </div>
               )}
             </button>
 
@@ -143,16 +162,30 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                       My Profile
                     </button>
                     <button 
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        // Using a simple window.location or Link would be better, but Navbar is in App.jsx
-                        // which is inside BrowserRouter. Navigate should be used.
-                      }}
+                      onClick={() => setUserMenuOpen(false)}
                       className="w-full text-left"
                     >
-                      <NavLink to="/orders" className="px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                      <NavLink to="/orders" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
                         <span className="material-symbols-outlined text-[18px] text-sage">history</span>
                         Order History
+                      </NavLink>
+                    </button>
+                    <button 
+                      onClick={() => setUserMenuOpen(false)}
+                      className="w-full text-left"
+                    >
+                      <NavLink to="/spa-bookings" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                        <span className="material-symbols-outlined text-[18px] text-sage">spa</span>
+                        My Spa Bookings
+                      </NavLink>
+                    </button>
+                    <button 
+                      onClick={() => setUserMenuOpen(false)}
+                      className="w-full text-left"
+                    >
+                      <NavLink to="/hotel-bookings" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                        <span className="material-symbols-outlined text-[18px] text-sage">hotel</span>
+                        My Hotel Bookings
                       </NavLink>
                     </button>
                   </div>
@@ -219,6 +252,30 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                 }
               >
                 Order History
+              </NavLink>
+              <NavLink
+                to="/spa-bookings"
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-xl transition-colors ${isActive
+                    ? 'bg-sage/20 text-sage-dark font-semibold'
+                    : 'text-surface-variant hover:text-sage-dark'
+                  }`
+                }
+              >
+                My Spa Bookings
+              </NavLink>
+              <NavLink
+                to="/hotel-bookings"
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-xl transition-colors ${isActive
+                    ? 'bg-sage/20 text-sage-dark font-semibold'
+                    : 'text-surface-variant hover:text-sage-dark'
+                  }`
+                }
+              >
+                My Hotel Bookings
               </NavLink>
             </div>
           </motion.div>

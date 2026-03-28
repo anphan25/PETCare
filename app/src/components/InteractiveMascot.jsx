@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useMascotStore } from "../stores/useMascotStore";
 
-// 1. Chú cún Voxel được thiết kế lại đẹp mắt theo tone màu PETCare
+// 1. Redesigned Voxel Dog with PETCare color palette
 function StyledVoxelDog(props) {
   const group = useRef();
   const headRef = useRef();
@@ -23,7 +23,7 @@ function StyledVoxelDog(props) {
   }, [props]);
 
   useFrame((state) => {
-    // Đầu cún nhìn theo chuột (Lerping mượt mà)
+    // Smooth head movement following mouse
     if (headRef.current) {
       const bodyRotationY = -Math.PI / 5;
       const targetX = Math.atan2(mouse.current.x, 600) - bodyRotationY;
@@ -32,7 +32,7 @@ function StyledVoxelDog(props) {
       headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetY, 0.08);
     }
 
-    // Logic nhảy lên khi ấn Add to cart / Book
+    // Jumping animation logic
     const baseY = props.position ? props.position[1] : 0;
     if (isJumping) {
       group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, baseY + Math.abs(Math.sin(state.clock.elapsedTime * 15)) * 0.5, 0.2);
@@ -40,7 +40,7 @@ function StyledVoxelDog(props) {
       group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, baseY, 0.2);
     }
 
-    // Logic vẫy đuôi
+    // Tail wagging logic
     if (tailRef.current) {
       if (isWagging) {
         tailRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 25) * 0.4;
@@ -52,45 +52,45 @@ function StyledVoxelDog(props) {
 
   return (
     <group ref={group} {...props}>
-      {/* Thân cún (Ivory White - #F9F9F9) */}
+      {/* Dog Body (Ivory White - #F9F9F9) */}
       <mesh position={[0, -0.2, 0]}>
         <boxGeometry args={[0.9, 0.8, 1.4]} />
         <meshStandardMaterial color="#F9F9F9" roughness={0.6} />
       </mesh>
 
-      {/* Bụng cún (Sand Beige - #EDF1D6) */}
+      {/* Dog Belly (Sand Beige - #EDF1D6) */}
       <mesh position={[0, -0.3, 0.05]}>
         <boxGeometry args={[0.92, 0.6, 1.3]} />
         <meshStandardMaterial color="#EDF1D6" roughness={0.8} />
       </mesh>
 
-      {/* Vòng cổ (Light Earth Orange - #E49393) */}
+      {/* Dog Collar (Light Earth Orange - #E49393) */}
       <mesh position={[0, 0.25, 0.6]}>
         <boxGeometry args={[0.7, 0.15, 0.7]} />
         <meshStandardMaterial color="#E49393" roughness={0.4} />
       </mesh>
 
-      {/* Trục đầu cún (Di chuyển theo chuột) */}
+      {/* Dog Head Axis */}
       <group ref={headRef} position={[0, 0.6, 0.7]}>
-        {/* Khối đầu */}
+        {/* Head Block */}
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[0.85, 0.8, 0.8]} />
           <meshStandardMaterial color="#F9F9F9" roughness={0.6} />
         </mesh>
         
-        {/* Mõm (Sand Beige - #EDF1D6) */}
+        {/* Muzzle (Sand Beige - #EDF1D6) */}
         <mesh position={[0, -0.1, 0.45]}>
           <boxGeometry args={[0.5, 0.35, 0.4]} />
           <meshStandardMaterial color="#EDF1D6" roughness={0.7} />
         </mesh>
         
-        {/* Mũi (Đen) */}
+        {/* Nose (Black) */}
         <mesh position={[0, 0.05, 0.66]}>
           <boxGeometry args={[0.15, 0.1, 0.1]} />
           <meshStandardMaterial color="#222222" roughness={0.5} />
         </mesh>
         
-        {/* Mắt (Đen) */}
+        {/* Eyes (Black) */}
         <mesh position={[-0.25, 0.15, 0.41]}>
           <boxGeometry args={[0.1, 0.1, 0.1]} />
           <meshStandardMaterial color="#222222" />
@@ -100,7 +100,7 @@ function StyledVoxelDog(props) {
           <meshStandardMaterial color="#222222" />
         </mesh>
 
-        {/* Tai cún (Sage Green - #9DC08B) */}
+        {/* Dog Ears (Sage Green - #9DC08B) */}
         <mesh position={[-0.4, 0.35, -0.1]} rotation={[0, 0, 0.2]}>
           <boxGeometry args={[0.2, 0.4, 0.3]} />
           <meshStandardMaterial color="#9DC08B" roughness={0.8} />
@@ -111,13 +111,13 @@ function StyledVoxelDog(props) {
         </mesh>
       </group>
 
-      {/* 4 Chân (Ivory White) */}
+      {/* 4 Legs (Ivory White) */}
       <mesh position={[-0.25, -0.7, 0.5]}><boxGeometry args={[0.25, 0.5, 0.25]} /><meshStandardMaterial color="#F9F9F9" /></mesh>
       <mesh position={[0.25, -0.7, 0.5]}><boxGeometry args={[0.25, 0.5, 0.25]} /><meshStandardMaterial color="#F9F9F9" /></mesh>
       <mesh position={[-0.25, -0.7, -0.5]}><boxGeometry args={[0.25, 0.5, 0.25]} /><meshStandardMaterial color="#F9F9F9" /></mesh>
       <mesh position={[0.25, -0.7, -0.5]}><boxGeometry args={[0.25, 0.5, 0.25]} /><meshStandardMaterial color="#F9F9F9" /></mesh>
 
-      {/* Trục Đuôi cún (Xoay khi được trigger) */}
+      {/* Dog Tail Axis */}
       <group position={[0, 0.1, -0.7]} ref={tailRef}>
         <mesh position={[0, 0.25, -0.1]} rotation={[-0.4, 0, 0]}>
           <boxGeometry args={[0.15, 0.6, 0.15]} />
