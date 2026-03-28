@@ -60,9 +60,7 @@
     box-shadow: 0 40px 60px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.05);
   }
 
-  .sanctuary-card {
-    @apply glass-panel rounded-2xl antigravity-shadow;
-  }
+
 
   .mesh-gradient {
     /* Richer, darker, and more vivid background for better glass contrast */
