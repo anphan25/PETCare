@@ -60,6 +60,10 @@
     box-shadow: 0 40px 60px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.05);
   }
 
+  .sanctuary-card {
+    @apply glass-panel rounded-2xl antigravity-shadow;
+  }
+
   .mesh-gradient {
     /* Richer, darker, and more vivid background for better glass contrast */
     background-color: #E8EFE4; 
@@ -98,6 +102,35 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .checkout-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    border-radius: 1.25rem;
+    color: var(--color-charcoal);
+    font-weight: 500;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .checkout-input:hover {
+    background: rgba(255, 255, 255, 0.65);
+    border-color: var(--color-sage);
+  }
+
+  .checkout-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.85);
+    border-color: var(--color-sage);
+    box-shadow: 0 10px 30px -10px rgba(157, 192, 139, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .checkout-input::placeholder {
+    color: var(--color-surface-variant);
+    opacity: 0.4;
   }
 }
 

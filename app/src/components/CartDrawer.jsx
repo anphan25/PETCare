@@ -1,6 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, onRemove, totalPrice }) {
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    onClose();
+    navigate('/checkout');
+  };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -10,14 +17,14 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-100"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md z-[70] glass-panel-strong shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 h-full w-full max-w-md z-110 glass-panel-strong shadow-2xl flex flex-col"
           >
             {/* Header */}
             <div className="flex justify-between items-center p-6 border-b border-white/30">
@@ -51,7 +58,7 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
                       exit={{ opacity: 0, x: -50, height: 0 }}
                       className="flex gap-4 p-4 bg-white/40 rounded-2xl border border-white/50"
                     >
-                      <img src={item.image} alt={item.name} className="w-16 h-16 rounded-xl object-cover" />
+                      <img src={item.image_url} alt={item.name} className="w-16 h-16 rounded-xl object-cover" />
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-sm text-charcoal truncate">{item.name}</h4>
                         <p className="text-sage-dark font-bold text-sm mt-1">${item.price.toFixed(2)}</p>
@@ -95,6 +102,7 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={handleCheckout}
                   className="w-full py-4 btn-primary text-lg"
                 >
                   Checkout

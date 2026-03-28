@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
 import { useMascotStore } from '../stores/useMascotStore';
+import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
 
 const sortOptions = [
@@ -9,11 +10,104 @@ const sortOptions = [
   { label: 'Price: High to Low', value: 'price-desc' },
 ];
 
+const dummyData = [
+    {
+        "id": "7633a5dc-1242-444a-875b-c416e7cf05a6",
+        "name": "Salmon Wellness Mix",
+        "description": "Rich in Omega-3 for healthy skin and a shiny coat.",
+        "price": 52.50,
+        "category": "Food",
+        "image_url": "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?q=80&w=400",
+        "stock": 30,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "2b7f92b0-8d06-44b9-bccb-7dcd2b9b0b6e",
+        "name": "Grain-Free Lamb Recipe",
+        "description": "Hypoallergenic lamb formula for pets with sensitive stomachs.",
+        "price": 49.99,
+        "category": "Food",
+        "image_url": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=400",
+        "stock": 25,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "0d17d357-9b3e-4013-9453-20aaba67ece2",
+        "name": "Sage Green Knit Sweater",
+        "description": "Minimalist cozy sweater in our signature sage green color.",
+        "price": 25.00,
+        "category": "Fashion",
+        "image_url": "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=400",
+        "stock": 20,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "2256d6cc-40af-4f63-b71d-e4f3263d105f",
+        "name": "Waterproof Clear Raincoat",
+        "description": "Keep your pet dry and stylish during rainy day walks.",
+        "price": 32.00,
+        "category": "Fashion",
+        "image_url": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=400",
+        "stock": 15,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "21d70d12-1d77-475a-b121-41aab1f1b79e",
+        "name": "Summer Floral Dress",
+        "description": "Lightweight and breathable linen dress for sunny days.",
+        "price": 22.50,
+        "category": "Fashion",
+        "image_url": "https://images.unsplash.com/photo-1591768793355-74d7af23f11d?q=80&w=400",
+        "stock": 18,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "83ee9dc4-2aff-4f41-96b4-e0d100616da2",
+        "name": "Plush Bear Ear Hoodie",
+        "description": "Soft velvet hoodie with adorable bear ears on top.",
+        "price": 29.99,
+        "category": "Fashion",
+        "image_url": "https://images.unsplash.com/photo-1541599540903-21b33de53f5c?q=80&w=400",
+        "stock": 30,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "321ca51e-32cb-4ac7-a687-3289bced2131",
+        "name": "Winter Puffer Coat",
+        "description": "Insulated warm coat for extreme cold weather protection.",
+        "price": 45.00,
+        "category": "Fashion",
+        "image_url": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=400",
+        "stock": 10,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "77dd8cac-d529-4fe0-865b-f597599cc9f5",
+        "name": "Auto-Retractable Leash",
+        "description": "Heavy-duty 5m leash with a comfortable ergonomic grip.",
+        "price": 24.00,
+        "category": "Accessory",
+        "image_url": "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=400",
+        "stock": 35,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    },
+    {
+        "id": "098e2b23-255d-40d4-9cb9-6d00273df8ab",
+        "name": "Ceramic Slow Feeder",
+        "description": "Eco-friendly bowl designed to prevent fast eating and bloat.",
+        "price": 35.00,
+        "category": "Accessory",
+        "image_url": "https://images.unsplash.com/photo-1544191746-e4d3ff41e76b?q=80&w=400",
+        "stock": 20,
+        "created_at": "2026-03-26T16:48:06.151337+00:00"
+    }
+]
+
 const ITEMS_PER_PAGE = 50;
 
 export default function Products({ onAddToCart }) {
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [allProducts, setAllProducts] = useState(dummyData);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,29 +116,39 @@ export default function Products({ onAddToCart }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  
+  const isAuthLoading = useAuthStore((state) => state.isLoading);
 
   // Fetch Products from Supabase
-  useEffect(() => {
-    console.log("fetching data")
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('products')
-          .select('*');
-        console.log("data: ", data)
-        if (error) throw error;
-        setAllProducts(data || []);
-      } catch (err) {
-        console.error('Error fetching products:', err.message);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   // Wait for Supabase to restore session on F5 to prevent request queue from hanging
+  //   if (isAuthLoading) return;
 
-    fetchProducts();
-  }, []);
+  //   console.log("fetching data")
+  //   const fetchProducts = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const { data, error } = await supabase
+  //         .from('products')
+  //         .select('*');
+  //       console.log("data: ", data)
+  //       if (error) throw error;
+  //       setAllProducts(data || []);
+  //     } catch (err) {
+  //       console.error('Error fetching products:', err.message);
+  //       setError(err.message);
+  //     } finally {
+  //       console.log("hehehehe")
+  //       setAllProducts(dummyData)
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProducts();
+  // }, [isAuthLoading]);
+
+
 
   const categories = useMemo(() => {
     return ['All', ...new Set(allProducts.map(p => p.category))];
@@ -91,16 +195,16 @@ export default function Products({ onAddToCart }) {
   //   setCurrentPage(1);
   // }
   
-  const paginatedProducts = processedProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  // const paginatedProducts = processedProducts.slice(
+  //   (currentPage - 1) * ITEMS_PER_PAGE,
+  //   currentPage * ITEMS_PER_PAGE
+  // );
 
-  useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(1);
-    }
-  }, [currentPage, totalPages]);
+  // useEffect(() => {
+  //   if (currentPage > totalPages && totalPages > 0) {
+  //     setCurrentPage(1);
+  //   }
+  // }, [currentPage, totalPages]);
 
   return (
     <div className="mesh-gradient min-h-screen">
@@ -152,28 +256,65 @@ export default function Products({ onAddToCart }) {
             />
           </div>
 
-          <div className="flex gap-4">
-            {/* Unified Sort Dropdown */}
-            <div className="relative group flex-1 md:flex-none">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                <span className="material-symbols-outlined text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  sort
-                </span>
-              </div>
-              <select 
-                value={activeSort}
-                onChange={(e) => { setActiveSort(e.target.value); setCurrentPage(1); }}
-                className="w-full md:w-56 pl-12 pr-10 py-4 rounded-2xl glass-panel-strong border border-white/40 focus:outline-none focus:ring-4 focus:ring-sage/20 focus:border-sage-dark appearance-none bg-transparent cursor-pointer font-bold text-forest transition-all h-[60px]"
+          <div className="flex gap-4 relative">
+            {/* Unified Sort Dropdown (Custom implementation) */}
+            <div className="relative flex-1 md:flex-none">
+              <button 
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="w-full md:w-56 pl-12 pr-10 py-4 rounded-2xl glass-panel-strong border border-white/40 flex items-center justify-between font-bold text-forest transition-all h-[60px] group text-sm sm:text-base whitespace-nowrap overflow-hidden"
               >
-                {sortOptions.map(opt => (
-                  <option key={opt.value} value={opt.value} className="bg-white py-2 text-forest font-medium">{opt.label}</option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none z-10">
-                <span className="material-symbols-outlined text-sage-dark group-hover:translate-y-[-2px] transition-transform">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <span className="material-symbols-outlined text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    sort
+                  </span>
+                </div>
+                <span className="truncate">{sortOptions.find(o => o.value === activeSort)?.label}</span>
+                <motion.span 
+                  animate={{ rotate: isSortOpen ? 180 : 0 }}
+                  className="material-symbols-outlined text-sage-dark group-hover:translate-y-[-2px] transition-transform ml-2"
+                >
                   expand_more
-                </span>
-              </div>
+                </motion.span>
+              </button>
+
+              <AnimatePresence>
+                {isSortOpen && (
+                  <>
+                    {/* Invisible backdrop to close on click outside */}
+                    <div className="fixed inset-0 z-40" onClick={() => setIsSortOpen(false)} />
+                    
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 top-[70px] w-full md:w-64 glass-panel-strong rounded-2xl shadow-2xl z-50 overflow-hidden border border-white/50"
+                    >
+                      <div className="py-2">
+                        {sortOptions.map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() => {
+                              setActiveSort(opt.value);
+                              setCurrentPage(1);
+                              setIsSortOpen(false);
+                            }}
+                            className={`w-full text-left px-6 py-3.5 text-sm font-bold transition-all flex items-center justify-between ${
+                              activeSort === opt.value 
+                                ? 'bg-sage-dark text-white' 
+                                : 'text-forest hover:bg-white/50 text-opacity-80'
+                            }`}
+                          >
+                            {opt.label}
+                            {activeSort === opt.value && (
+                              <span className="material-symbols-outlined text-[18px]">check</span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </motion.div>
@@ -222,7 +363,7 @@ export default function Products({ onAddToCart }) {
               [...Array(8)].map((_, i) => (
                 <div key={i} className="glass-panel h-[400px] rounded-2xl animate-pulse bg-white/20" />
               ))
-            ) : paginatedProducts.map((product, i) => (
+            ) : processedProducts.map((product, i) => (
               <motion.div
                 key={product.id}
                 layoutId={`product-card-${product.id}`}
@@ -309,7 +450,7 @@ export default function Products({ onAddToCart }) {
           </AnimatePresence>
         </motion.div>
 
-        {paginatedProducts.length === 0 && (
+        {allProducts.length === 0 && (
           <div className="py-20 text-center text-surface-variant">
             <span className="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
             <p className="text-xl">No products found.</p>

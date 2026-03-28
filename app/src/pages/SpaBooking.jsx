@@ -68,18 +68,31 @@ export default function SpaBooking({ onBook }) {
       <div className="absolute bottom-1/4 left-1/3 w-[500px] h-[500px] bg-sage-light opacity-20 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-20 right-1/4 w-[400px] h-[400px] bg-sage-dark opacity-30 rounded-full blur-[120px] pointer-events-none" />
 
-      <main className="relative pt-32 pb-20 px-6 max-w-screen-2xl mx-auto overflow-hidden">
-        {/* Page Header */}
-        <header className="relative mb-12 sm:mb-20 text-center md:text-left z-10">
-          <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <span className="material-symbols-outlined text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
-              <span className="text-xs sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
+      <main className="relative pt-32 pb-20 px-6 max-w-screen-2xl mx-auto">
+        {/* Header Hero */}
+        <header className="relative mb-12 sm:mb-20 rounded-2xl sm:rounded-3xl overflow-hidden h-[320px] sm:h-[450px] md:h-[500px] antigravity-shadow">
+          <img 
+            src="/spa-background.png" 
+            alt="Luxury Pet Spa" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-linear-to-r from-forest/40 to-transparent" />
+          
+          <motion.div 
+            initial={{ x: -50, opacity: 0 }} 
+            animate={{ x: 0, opacity: 1 }}
+            className="absolute inset-y-0 left-0 flex flex-col justify-center px-8 sm:px-16 max-w-2xl z-20"
+          >
+            <div className="glass-panel-strong p-6 sm:p-12 rounded-2xl max-w-[90%] sm:max-w-none">
+              <div className="inline-flex items-center space-x-2 mb-3 sm:mb-4">
+                <span className="material-symbols-outlined text-sage-dark text-sm sm:text-base" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+                <span className="text-[10px] sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
+              </div>
+              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-forest tracking-tight mb-4 sm:mb-6 leading-tight sm:leading-[1.1]">Luxury Spa & Grooming</h1>
+              <p className="text-xs sm:text-lg text-surface-variant leading-relaxed font-medium">
+                Give your pet the royal treatment they deserve. From organic chamomile baths to precision styling.
+              </p>
             </div>
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-forest tracking-tight mb-6 leading-[1.1]">Luxury Spa & Grooming</h1>
-            <p className="text-lg sm:text-xl text-surface-variant max-w-2xl leading-relaxed mx-auto md:mx-0">
-              Give your pet the royal treatment they deserve. From organic chamomile baths to precision styling, book a pampering session today.
-            </p>
           </motion.div>
         </header>
 
@@ -262,7 +275,7 @@ export default function SpaBooking({ onBook }) {
               initial={{ y: 40, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow sticky top-24 sm:top-32"
+              className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow sticky top-24"
             >
               <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">Booking Summary</h3>
               

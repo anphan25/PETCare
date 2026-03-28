@@ -1,21 +1,25 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
+import LoadingScreen from './components/LoadingScreen';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import SpaBooking from './pages/SpaBooking';
 import InteractiveMascot from './components/InteractiveMascot';
 import AuthModal from './components/AuthModal';
+import Checkout from './pages/Checkout';
+import HotelBooking from './pages/HotelBooking';
 import { useCart, useBookings } from './hooks/useStore';
 import { supabase } from './supabaseClient';
 import { useAuthStore } from './stores/useAuthStore';
+import OrderHistory from './pages/OrderHistory';
 
 function AnimatedRoutes({ onAddToCart, onBook }) {
   const location = useLocation();
-  const showMascot = ['/products', '/spa'].includes(location.pathname);
+  const showMascot = ['/products', '/spa', '/hotel'].includes(location.pathname);
   useEffect(() => {
   const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'TOKEN_REFRESHED') {
@@ -46,6 +50,11 @@ function AnimatedRoutes({ onAddToCart, onBook }) {
             <Route path="/" element={<Dashboard onAddToCart={onAddToCart} />} />
             <Route path="/products" element={<Products onAddToCart={onAddToCart} />} />
             <Route path="/spa" element={<SpaBooking onBook={onBook} />} />
+            <Route path="/hotel" element={<HotelBooking onBook={onBook} />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<OrderHistory />} />
+            {/* Catch-all route to redirect 404s / typos back to Home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </motion.div>
       </AnimatePresence>
@@ -55,7 +64,7 @@ function AnimatedRoutes({ onAddToCart, onBook }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative z-9999 pointer-events-none"
+            className="relative z-40 pointer-events-none"
           >
             <InteractiveMascot />
           </motion.div>
@@ -70,7 +79,7 @@ export default function App() {
   const { addBooking } = useBookings();
   const [cartOpen, setCartOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
-  const { setUser, setProfile, setLoading } = useAuthStore();
+  const { setUser, setProfile, setLoading, loading } = useAuthStore();
 
   useEffect(() => {
     const fetchProfile = async (user) => {
@@ -130,6 +139,9 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <AnimatePresence mode="wait">
+        {loading && <LoadingScreen key="loader" />}
+      </AnimatePresence>
       <div className="min-h-screen flex flex-col">
         <Navbar 
           cartCount={totalItems} 
