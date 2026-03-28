@@ -57,7 +57,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2 text-lg sm:text-xl font-black text-sage-dark shrink-0">
           <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
-          <span className="hidden xs:inline">PETCare</span>
+          <span className="hidden sm:inline">PETCare</span>
         </NavLink>
 
         {/* Desktop Nav */}
