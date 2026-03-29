@@ -1,7 +1,7 @@
-import React, { Component, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useMascotStore } from "../stores/useMascotStore";
+import { useMascotStore } from "../stores/useMascotStore.ts";
 
 // 1. Redesigned Voxel Dog with PETCare color palette
 function StyledVoxelDog(props) {
@@ -9,7 +9,6 @@ function StyledVoxelDog(props) {
   const headRef = useRef();
   const tailRef = useRef();
   const mouse = useRef({ x: 0, y: 0 });
-  const isWagging = useMascotStore((state) => state.isWagging);
   const isJumping = useMascotStore((state) => state.isJumping);
 
   useEffect(() => {
@@ -40,13 +39,11 @@ function StyledVoxelDog(props) {
       group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, baseY, 0.2);
     }
 
-    // Tail wagging logic
+    // Tail wagging logic - Always wags unless jumping (which is faster)
     if (tailRef.current) {
-      if (isWagging) {
-        tailRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 25) * 0.4;
-      } else {
-        tailRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 3) * 0.05;
-      }
+      const speed = isJumping ? 25 : 15;
+      const amplitude = isJumping ? 0.4 : 0.3;
+      tailRef.current.rotation.z = Math.sin(state.clock.elapsedTime * speed) * amplitude;
     }
   });
 

@@ -34,7 +34,8 @@ export default function Checkout() {
 
 
 
-  const { user, setLoading, loading } = useAuthStore();
+  const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',

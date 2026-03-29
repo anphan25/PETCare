@@ -157,10 +157,14 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                   </div>
                   
                   <div className="py-2">
-                    <button className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
+                    <NavLink 
+                      to="/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors"
+                    >
                       <span className="material-symbols-outlined text-[18px] text-sage">person</span>
                       My Profile
-                    </button>
+                    </NavLink>
                     <button 
                       onClick={() => setUserMenuOpen(false)}
                       className="w-full text-left"

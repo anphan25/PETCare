@@ -20,22 +20,30 @@ const getStatusConfig = (status) => {
 };
 
 export default function OrderHistory() {
-  const { user, setLoading } = useAuthStore();
+  const { user } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const [userOrders, setUserOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
-    // Start loading immediately when entering the page
-    setLoading(true);
+    console.log('[DEBUG] OrderHistory useEffect running. user:', user?.id);
+    let isMounted = true;
+    setIsLoading(true);
 
     if (!user) {
-      // If no user session is found after a brief check, hide loading
-      const timer = setTimeout(() => setLoading(false), 500);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => {
+        if (isMounted) setIsLoading(false);
+      }, 500);
+      return () => {
+        isMounted = false;
+        clearTimeout(timer);
+      };
     }
 
     const fetchOrders = async () => {
+      console.log('[DEBUG] fetchOrders called');
       try {
+        console.log('[DEBUG] Sending supabase request');
         const { data, error } = await supabase
           .from('orders')
           .select(`
@@ -56,48 +64,59 @@ export default function OrderHistory() {
 
         if (error) throw error;
 
-        const formattedOrders = data.map(order => {
-          const config = getStatusConfig(order.status);
-          const date = new Date(order.created_at).toLocaleDateString('en-US', { 
-            month: 'long', 
-            day: 'numeric', 
-            year: 'numeric' 
+        if (isMounted) {
+          const formattedOrders = data.map(order => {
+            const config = getStatusConfig(order.status);
+            const date = new Date(order.created_at).toLocaleDateString('en-US', { 
+              month: 'long', 
+              day: 'numeric', 
+              year: 'numeric' 
+            });
+
+            return {
+              id: `ORD-${order.id.slice(0, 4).toUpperCase()}`,
+              dbId: order.id,
+              date,
+              total: order.total_amount,
+              status: config.label,
+              statusColor: config.color,
+              icon: config.icon,
+              itemCount: order.order_details.reduce((sum, d) => sum + d.quantity, 0),
+              items: order.order_details.map(d => ({
+                name: d.products?.name || 'Sanctuary Item',
+                price: d.unit_price,
+                qty: d.quantity,
+                image: d.products?.image_url || 'https://via.placeholder.com/150'
+              }))
+            };
           });
 
-          return {
-            id: `ORD-${order.id.slice(0, 4).toUpperCase()}`,
-            dbId: order.id,
-            date,
-            total: order.total_amount,
-            status: config.label,
-            statusColor: config.color,
-            icon: config.icon,
-            itemCount: order.order_details.reduce((sum, d) => sum + d.quantity, 0),
-            items: order.order_details.map(d => ({
-              name: d.products?.name || 'Sanctuary Item',
-              price: d.unit_price,
-              qty: d.quantity,
-              image: d.products?.image_url || 'https://via.placeholder.com/150'
-            }))
-          };
-        });
-
-        setUserOrders(formattedOrders);
+          setUserOrders(formattedOrders);
+        }
       } catch (err) {
-        console.error('Error fetching orders:', err.message);
+        console.error('[DEBUG] Error fetching orders:', err.message);
       } finally {
-        setLoading(false);
+        console.log('[DEBUG] fetchOrders finally block');
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchOrders();
     
-    // Cleanup to ensure loading is off when leaving the page
-    return () => setLoading(false);
-  }, [user, setLoading]);
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   return (
     <div className="mesh-gradient min-h-screen relative text-charcoal selection:bg-sage/30">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-md">
+          <div className="w-12 h-12 border-4 border-sage/30 border-t-sage-dark rounded-full animate-spin"></div>
+        </div>
+      )}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div 
           animate={{ x: [0, 30, 0], y: [0, -20, 0] }}

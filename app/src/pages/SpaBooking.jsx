@@ -1,7 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
-import { spaServices, defaultPets, timeSlots, groomer } from '../data/products';
+import { useNavigate } from 'react-router-dom';
+import { spaServices, timeSlots, groomer, defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
+import { useAuthStore } from '../stores/useAuthStore';
+import { supabase } from '../supabaseClient';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -12,13 +15,17 @@ function getFirstDayOfWeek(year, month) {
 }
 
 export default function SpaBooking({ onBook }) {
+  const today = new Date();
   const [selectedPet, setSelectedPet] = useState(defaultPets[0]);
   const [selectedServices, setSelectedServices] = useState([spaServices[1].id]);
-  const [selectedDate, setSelectedDate] = useState(12);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('10:30 AM');
-  const [currentMonth, setCurrentMonth] = useState(2); // March (0-indexed)
-  const [currentYear] = useState(2026);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear] = useState(today.getFullYear());
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { profile } = useAuthStore();
+  const navigate = useNavigate();
   const setWagging = useMascotStore((state) => state.setWagging);
   const triggerJump = useMascotStore((state) => state.triggerJump);
 
@@ -46,18 +53,52 @@ export default function SpaBooking({ onBook }) {
   const tax = subtotal * 0.05;
   const total = subtotal + tax;
 
-  const handleConfirm = () => {
-    const booking = {
-      pet: selectedPet.name,
-      services: selectedServiceDetails.map(s => s.name),
-      date: `${monthNames[currentMonth]} ${selectedDate}, ${currentYear}`,
-      time: selectedTime,
-      total,
-    };
-    onBook(booking);
-    setBookingConfirmed(true);
-    triggerJump();
-    setTimeout(() => setBookingConfirmed(false), 3000);
+  const handleConfirm = async () => {
+    if (!selectedDate || !profile) return;
+    
+    setIsSubmitting(true);
+    try {
+      // Create a JS Date object for the booking
+      const bookingDate = new Date(currentYear, currentMonth, selectedDate);
+      // Construct ISO string for Supabase
+      const isoDate = bookingDate.toISOString();
+ 
+      // Use fixed UUID-like strings for Buddy and Mochi
+      const petIdMap = { 
+        'Buddy': '00000000-0000-0000-0000-000000000001', 
+        'Mochi': '00000000-0000-0000-0000-000000000002' 
+      };
+      const hardcodedPetId = petIdMap[selectedPet.name] || selectedPet.id;
+      
+      const { error } = await supabase
+        .from('spa_bookings')
+        .insert({
+          user_id: profile.id,
+          pet_id: hardcodedPetId,
+          service_type: selectedServiceDetails.map(s => s.name).join(', '),
+          booking_date: isoDate,
+          subtotal: subtotal,
+          tax_amount: tax,
+          total_amount: total,
+          status: 'confirmed',
+          note: `Time: ${selectedTime}`
+        });
+
+      if (error) throw error;
+
+      setBookingConfirmed(true);
+      triggerJump();
+      
+      // Navigate after a delay to show the success state
+      setTimeout(() => {
+        navigate('/spa-bookings');
+      }, 2000);
+    } catch (err) {
+      console.error('Spa booking error:', err.message);
+      alert('Failed to confirm booking. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,7 +148,7 @@ export default function SpaBooking({ onBook }) {
               </div>
               <div className="glass-panel p-6 sm:p-8 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-6">
                 {defaultPets.map(pet => {
-                  const isSelected = selectedPet.id === pet.id;
+                  const isSelected = selectedPet?.id === pet.id;
                   return (
                     <motion.div
                       key={pet.id}
@@ -128,10 +169,6 @@ export default function SpaBooking({ onBook }) {
                     </motion.div>
                   );
                 })}
-                <button className="flex flex-col items-center justify-center p-3 sm:p-4 w-full sm:w-32 h-24 sm:h-36 rounded-xl border-2 border-dashed border-outline-variant hover:border-sage-dark hover:bg-white/30 hover:text-sage-dark transition-all group">
-                  <span className="material-symbols-outlined text-2xl sm:text-3xl mb-1 sm:mb-2 group-hover:scale-110 transition-transform">add_circle</span>
-                  <span className="text-xs sm:text-sm font-medium">Add Pet</span>
-                </button>
               </div>
             </motion.section>
 
@@ -222,12 +259,16 @@ export default function SpaBooking({ onBook }) {
                   {calendarDays.map((d, i) => {
                     const isBooked = d.current && bookedDates.includes(d.day);
                     const isSelected = d.current && selectedDate === d.day;
+                    const dateObj = d.current ? new Date(currentYear, currentMonth, d.day) : null;
+                    const isPast = d.current && dateObj < new Date().setHours(0,0,0,0);
+
                     return (
                       <div
                         key={i}
-                        onClick={() => d.current && !isBooked && setSelectedDate(d.day)}
+                        onClick={() => d.current && !isBooked && !isPast && setSelectedDate(d.day)}
                         className={`aspect-square flex items-center justify-center transition-colors rounded-lg sm:rounded-xl text-xs sm:text-base ${
-                          !d.current ? 'text-outline-variant/40' :
+                          !d.current ? 'text-charcoal/20' :
+                          isPast ? 'text-charcoal/30 cursor-not-allowed' :
                           isSelected ? 'bg-sage-dark text-white font-bold shadow-lg shadow-sage-dark/30 cursor-pointer' :
                           isBooked ? 'text-earth-rose font-bold cursor-not-allowed' :
                           'text-charcoal hover:bg-sage/40 cursor-pointer'
@@ -283,9 +324,8 @@ export default function SpaBooking({ onBook }) {
                 <div className="flex justify-between items-center pb-4 border-b border-white/30">
                   <div className="flex items-center space-x-3">
                     <span className="material-symbols-outlined text-sage-dark text-xl sm:text-2xl">pets</span>
-                    <span className="text-xs sm:text-sm text-surface-variant">Selected Pet</span>
+                    <span className="text-xs sm:text-sm text-surface-variant">Pet: <span className="text-sage-dark font-bold">{selectedPet?.name || '...'}</span></span>
                   </div>
-                  <span className="font-bold text-sm sm:text-base">{selectedPet.name}</span>
                 </div>
                 
                 <div className="flex justify-between items-start pb-4 border-b border-white/30">
@@ -334,15 +374,26 @@ export default function SpaBooking({ onBook }) {
 
               <button
                 onClick={handleConfirm}
-                disabled={selectedServices.length === 0}
+                disabled={selectedServices.length === 0 || !selectedDate || !selectedTime || isSubmitting || bookingConfirmed}
                 className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all ${
-                  selectedServices.length > 0
+                  (selectedServices.length > 0 && selectedDate && selectedTime && !isSubmitting && !bookingConfirmed)
                     ? 'bg-sage-dark text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-sage-dark/30'
-                    : 'bg-outline-variant/30 text-outline cursor-not-allowed'
+                    : 'bg-outline-variant/30 text-outline cursor-not-allowed shadow-none'
                 }`}
               >
-                <span>Confirm Booking</span>
-                <span className="material-symbols-outlined">arrow_forward</span>
+                {isSubmitting ? (
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : bookingConfirmed ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined">check_circle</span>
+                    <span>Sanctuary Confirmed!</span>
+                  </div>
+                ) : (
+                  <>
+                    <span>Confirm Booking</span>
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </>
+                )}
               </button>
 
 

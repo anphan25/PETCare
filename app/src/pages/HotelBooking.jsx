@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
+import { useAuthStore } from '../stores/useAuthStore';
+import { supabase } from '../supabaseClient';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -35,13 +38,17 @@ const hotelSuites = [
 ];
 
 export default function HotelBooking({ onBook }) {
+  const today = new Date();
   const [selectedPet, setSelectedPet] = useState(defaultPets[0]);
   const [selectedSuite, setSelectedSuite] = useState(hotelSuites[1].id);
-  const [checkIn, setCheckIn] = useState(12);
-  const [checkOut, setCheckOut] = useState(15);
-  const [currentMonth, setCurrentMonth] = useState(2); // March 2026
-  const [currentYear] = useState(2026);
+  const [checkIn, setCheckIn] = useState(null);
+  const [checkOut, setCheckOut] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear] = useState(today.getFullYear());
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { profile } = useAuthStore();
+  const navigate = useNavigate();
   
   const setWagging = useMascotStore((state) => state.setWagging);
   const triggerJump = useMascotStore((state) => state.triggerJump);
@@ -77,19 +84,53 @@ export default function HotelBooking({ onBook }) {
   const tax = subtotal * 0.05;
   const total = subtotal + tax;
 
-  const handleConfirm = () => {
-    if (!checkIn || !checkOut) return;
-    const booking = {
-      pet: selectedPet.name,
-      services: [`${suiteDetails.name} (${duration} nights)`],
-      date: `Arrival: ${monthNames[currentMonth]} ${checkIn} - ${checkOut}, ${currentYear}`,
-      time: 'Check-in: 2:00 PM',
-      total,
-    };
-    onBook?.(booking);
-    setBookingConfirmed(true);
-    triggerJump();
-    setTimeout(() => setBookingConfirmed(false), 3000);
+  const handleConfirm = async () => {
+    if (!checkIn || !checkOut || !profile || !selectedPet) return;
+    
+    setIsSubmitting(true);
+    try {
+      // Construct ISO string for Supabase
+      const checkInDate = new Date(currentYear, currentMonth, checkIn).toISOString();
+      const checkOutDate = new Date(currentYear, currentMonth, checkOut).toISOString();
+
+      // Use fixed UUID-like strings for Buddy and Mochi
+      const petIdMap = { 
+        'Buddy': '00000000-0000-0000-0000-000000000001', 
+        'Mochi': '00000000-0000-0000-0000-000000000002' 
+      };
+      const hardcodedPetId = petIdMap[selectedPet.name] || selectedPet.id;
+ 
+      const { error } = await supabase
+        .from('hotel_bookings')
+        .insert({
+          user_id: profile.id,
+          pet_id: hardcodedPetId,
+          suite_type: suiteDetails.name,
+          check_in_date: checkInDate,
+          check_out_date: checkOutDate,
+          duration_nights: duration,
+          price_per_night: suiteDetails.price,
+          subtotal: subtotal,
+          tax_amount: tax,
+          total_amount: total,
+          status: 'confirmed',
+          note: `Stay for ${selectedPet.name}`
+        });
+
+      if (error) throw error;
+
+      setBookingConfirmed(true);
+      triggerJump();
+      
+      setTimeout(() => {
+        navigate('/hotel-bookings');
+      }, 2000);
+    } catch (err) {
+      console.error('Hotel booking error:', err.message);
+      alert('Failed to confirm reservation. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -136,26 +177,26 @@ export default function HotelBooking({ onBook }) {
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">1</span>
                 <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Select Your Pet</h2>
               </div>
-              <div className="glass-panel p-6 sm:p-8 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-6">
+              <div className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-8">
                 {defaultPets.map(pet => {
-                  const isSelected = selectedPet.id === pet.id;
+                  const isSelected = selectedPet?.id === pet.id;
                   return (
                     <motion.div
                       key={pet.id}
-                      whileHover={{ y: -4 }}
+                      whileHover={{ y: -5 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedPet(pet)}
-                      className={`flex flex-col items-center p-3 sm:p-4 rounded-xl cursor-pointer transition-all shadow-lg min-w-[100px] flex-1 sm:flex-none ${
+                      className={`flex flex-col items-center p-4 sm:p-5 rounded-2xl cursor-pointer transition-all shadow-xl min-w-[120px] flex-1 sm:flex-none ${
                         isSelected
-                          ? 'bg-white/40 border-2 border-sage-dark'
+                          ? 'bg-white/40 border-2 border-sage-dark scale-105'
                           : 'bg-white/20 border-2 border-transparent hover:bg-white/40'
                       }`}
                     >
-                      <div className={`w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden mb-3 ${isSelected ? 'ring-4 ring-sage-dark/20' : ''}`}>
+                      <div className={`w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-4 ${isSelected ? 'ring-4 ring-sage-dark/30 shadow-2xl' : ''}`}>
                         <img alt={pet.name} className="w-full h-full object-cover" src={pet.image} />
                       </div>
-                      <span className="font-bold text-charcoal text-sm sm:text-base">{pet.name}</span>
-                      <span className="text-[10px] sm:text-xs text-surface-variant text-center">{pet.age} • {pet.breed}</span>
+                      <span className="font-black text-forest text-base sm:text-lg">{pet.name}</span>
+                      <span className="text-[10px] sm:text-xs text-charcoal/60 font-bold uppercase tracking-widest">{pet.breed}</span>
                     </motion.div>
                   );
                 })}
@@ -193,12 +234,16 @@ export default function HotelBooking({ onBook }) {
                     const isSelected = d.current && (d.day === checkIn || d.day === checkOut);
                     const isInRange = d.current && checkIn && checkOut && d.day > checkIn && d.day < checkOut;
                     
+                    const dateObj = d.current ? new Date(currentYear, currentMonth, d.day) : null;
+                    const isPast = d.current && dateObj < new Date().setHours(0,0,0,0);
+                    
                     return (
                       <div
                         key={i}
-                        onClick={() => d.current && handleDateClick(d.day)}
+                        onClick={() => d.current && !isPast && handleDateClick(d.day)}
                         className={`aspect-square flex items-center justify-center transition-all rounded-xl relative cursor-pointer text-sm sm:text-base ${
-                          !d.current ? 'text-outline-variant/40' :
+                          !d.current ? 'text-charcoal/20' :
+                          isPast ? 'text-charcoal/30 cursor-not-allowed' :
                           isSelected ? 'bg-sage-dark text-white font-bold shadow-lg z-10' :
                           isInRange ? 'bg-sage/20 text-sage-dark font-bold' :
                           'text-charcoal hover:bg-white/40'
@@ -332,11 +377,11 @@ export default function HotelBooking({ onBook }) {
               <div className="bg-white/40 p-5 sm:p-6 rounded-xl mb-8 sm:mb-10 space-y-2 border border-white/40 shadow-inner">
                 <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/40">
                   <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-sage">
-                    <img src={selectedPet.image} alt={selectedPet.name} className="w-full h-full object-cover" />
+                    <img src={selectedPet?.image || '/placeholder-pet.png'} alt={selectedPet?.name || 'Pet'} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <span className="block text-[10px] uppercase tracking-widest text-surface-variant font-bold">Reserving for</span>
-                    <span className="font-bold text-sm sm:text-base text-forest">{selectedPet.name}</span>
+                    <span className="font-black text-sm sm:text-base">{selectedPet?.name || '...'}</span>
                   </div>
                 </div>
 
@@ -375,20 +420,25 @@ export default function HotelBooking({ onBook }) {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleConfirm}
-                disabled={bookingConfirmed || !checkIn || !checkOut}
-                className={`w-full py-4 sm:py-5 rounded-full text-base sm:text-xl font-bold transition-all ${
-                  bookingConfirmed ? 'bg-forest text-white' : 
-                  (!checkIn || !checkOut) ? 'bg-outline-variant/30 text-outline cursor-not-allowed shadow-none' : 
-                  'btn-primary shadow-[0_20px_40px_rgba(157,192,139,0.3)]'
+                disabled={isSubmitting || bookingConfirmed}
+                className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all ${
+                  (!isSubmitting && !bookingConfirmed)
+                    ? 'bg-forest text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-forest/30'
+                    : 'bg-outline-variant/30 text-outline cursor-not-allowed shadow-none'
                 }`}
               >
-                {bookingConfirmed ? (
-                  <span className="flex items-center justify-center gap-2">
+                {isSubmitting ? (
+                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : bookingConfirmed ? (
+                  <div className="flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">check_circle</span>
-                    Sanctuary Confirmed!
-                  </span>
+                    <span>Sanctuary Confirmed!</span>
+                  </div>
                 ) : (
-                  'Confirm Sanctuary Stay'
+                  <>
+                    <span>Confirm Booking</span>
+                    <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                  </>
                 )}
               </motion.button>
 

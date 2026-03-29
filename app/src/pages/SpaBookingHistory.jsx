@@ -3,75 +3,84 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
-import { useBookings } from '../hooks/useStore';
+import { supabase } from '../supabaseClient';
 
 
 export default function SpaBookingHistory() {
-  const { user, setLoading } = useAuthStore();
-  const { bookings } = useBookings();
+  const { user } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const [userBookings, setUserBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] = useState(null);
 
   useEffect(() => {
     // Start loading immediately when entering the page
-    setLoading(true);
+    setIsLoading(true);
 
     if (!user) {
       // If no user session is found after a brief check, hide loading
-      const timer = setTimeout(() => setLoading(false), 500);
+      const timer = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timer);
     }
 
-    const fetchBookings = () => {
+    const fetchBookings = async () => {
       try {
-        // Filter for spa bookings and ensure they belong to current user (if email exists in booking, or just all local bookings if using localStorage)
-        // Since useBookings is local storage based, we will just show local spa bookings.
-        const spaBookings = bookings.filter(b => b.type === 'spa');
-        
-        const formattedBookings = spaBookings.map(booking => {
+        const { data, error } = await supabase
+          .from('spa_bookings')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-          const date = new Date(booking.date || booking.createdAt).toLocaleDateString('en-US', { 
+        if (error) throw error;
+        
+        const formattedBookings = (data || []).map(booking => {
+          const dateStr = new Date(booking.booking_date).toLocaleDateString('en-US', { 
             month: 'long', 
             day: 'numeric', 
             year: 'numeric' 
           });
 
+          const petName = booking.pet_id === '00000000-0000-0000-0000-000000000001' ? 'Buddy' : (booking.pet_id === '00000000-0000-0000-0000-000000000002' ? 'Mochi' : 'My Pet');
+
           return {
             id: `SPA-${booking.id.slice(0, 4).toUpperCase()}`,
             dbId: booking.id,
-            date: `${date} at ${booking.time}`,
-            total: booking.price || 0,
-            status: 'Confirmed',
+            date: `${dateStr} (${booking.note || ''})`,
+            total: Number(booking.total_amount) || 0,
+            status: booking.status || 'Confirmed',
             statusColor: 'bg-sage-dark',
             icon: 'spa',
             itemCount: 1,
-            petName: booking.petName,
-            package: booking.package,
+            petName: petName,
+            package: booking.service_type,
             items: [{
-              name: `${booking.package} Package for ${booking.petName}`,
-              price: booking.price || 0,
+              name: `${booking.service_type}`,
+              price: Number(booking.total_amount) || 0,
               qty: 1,
               image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80'
             }]
           };
-        }).sort((a, b) => new Date(b.date) - new Date(a.date));
+        });
 
         setUserBookings(formattedBookings);
       } catch (err) {
         console.error('Error loading spa bookings:', err.message);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchBookings();
     
     // Cleanup to ensure loading is off when leaving the page
-    return () => setLoading(false);
-  }, [user, setLoading, bookings]);
+    return () => setIsLoading(false);
+  }, [user]);
 
   return (
     <div className="mesh-gradient min-h-screen relative text-charcoal selection:bg-sage/30">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-md">
+          <div className="w-12 h-12 border-4 border-sage/30 border-t-sage-dark rounded-full animate-spin"></div>
+        </div>
+      )}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div 
           animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
@@ -109,27 +118,32 @@ export default function SpaBookingHistory() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-sage/5 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl group-hover:bg-sage/10 transition-colors" />
                 
-                <div className="flex items-center gap-6 relative z-10">
-                  <div className={`w-16 h-16 rounded-2xl ${booking.statusColor} text-white flex items-center justify-center shadow-lg shadow-black/5`}>
-                    <span className="material-symbols-outlined text-3xl">{booking.icon}</span>
+                <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-4xl overflow-hidden shadow-2xl border-2 border-white/60 bg-white/30 shrink-0 group-hover:scale-105 transition-transform duration-700">
+                    <img 
+                      src={booking.items[0].image} 
+                      alt={booking.package} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className="text-sm font-black text-forest">{booking.id}</span>
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-surface-variant py-1 px-2 bg-white/40 rounded-full border border-white/60">{booking.date}</span>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-[10px] font-black text-white px-2 py-0.5 bg-sage-dark rounded-md shadow-sm uppercase tracking-tighter">{booking.id}</span>
+                      <span className="text-[10px] uppercase font-bold text-surface-variant/80 tracking-widest bg-white/40 px-3 py-0.5 rounded-full border border-white/60">{booking.date}</span>
                     </div>
-                    <h3 className="text-xl font-bold text-charcoal mb-0.5 max-w-md truncate">
-                      {booking.items.map(item => item.name).join(', ')}
-                    </h3>
-                    <p className="text-xs text-surface-variant font-medium">
-                      {booking.petName} • {booking.package} • 
-                      <span 
-                        onClick={() => setSelectedBooking(booking)}
-                        className="text-sage-dark hover:underline cursor-pointer ml-1 font-bold"
-                      >
-                        View details
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {booking.package.split(',').map((service, i) => (
+                        <span key={i} className="text-[10px] font-bold text-sage-dark bg-sage/20 border border-sage/30 px-3 py-1 rounded-full uppercase tracking-wider">
+                          {service.trim()}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[16px] text-sage-dark font-black">pets</span>
+                      <span className="text-sm text-charcoal/80 font-bold">
+                        Pet: <span className="text-sage-dark">{booking.petName}</span>
                       </span>
-                    </p>
+                    </div>
                   </div>
                 </div>
 
@@ -160,88 +174,6 @@ export default function SpaBookingHistory() {
           )}
         </div>
       </main>
-
-      {/* Order Summary Modal */}
-      <AnimatePresence>
-        {selectedBooking && (
-          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }} 
-              onClick={() => setSelectedBooking(null)}
-              className="fixed inset-0 bg-forest/20 backdrop-blur-xl" 
-            />
-            <motion.div 
-               initial={{ scale: 0.9, opacity: 0, y: 20 }}
-               animate={{ scale: 1, opacity: 1, y: 0 }}
-               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-               className="glass-panel-strong p-8 sm:p-12 rounded-[40px] w-full max-w-xl relative z-10 shadow-2xl overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-8 opacity-5">
-                <span className="material-symbols-outlined text-[120px]">{selectedBooking.icon}</span>
-              </div>
-
-              <div className="flex justify-between items-start mb-10">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-xs font-black text-sage-dark uppercase tracking-[0.2em]">Sanctuary Appointment</span>
-                    <div className={`px-3 py-1 rounded-full text-[10px] font-black text-white ${selectedBooking.statusColor}`}>
-                      {selectedBooking.status}
-                    </div>
-                  </div>
-                  <h2 className="text-3xl font-black text-forest tracking-tight">{selectedBooking.id}</h2>
-                  <p className="text-surface-variant font-medium">{selectedBooking.date}</p>
-                </div>
-                <button 
-                  onClick={() => setSelectedBooking(null)}
-                  className="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-sage-dark hover:bg-white/40 transition-all font-black"
-                >
-                  <span className="material-symbols-outlined">close</span>
-                </button>
-              </div>
-
-              <div className="space-y-6 mb-10 overflow-y-auto max-h-[30vh] pr-2 scrollbar-hide">
-                <h3 className="text-sm font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2">Service Breakdown</h3>
-                <div className="space-y-4">
-                  {selectedBooking.items.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center bg-white/30 p-4 rounded-2xl border border-white/40 group/item hover:bg-white/50 transition-colors">
-                      <div className="flex items-center gap-4">
-                        <img 
-                          src={item.image} 
-                          className="w-14 h-14 rounded-xl object-cover shadow-sm group-hover/item:scale-110 transition-transform duration-500" 
-                          alt={item.name} 
-                        />
-                        <div>
-                          <p className="font-bold text-charcoal">{item.name}</p>
-                          <p className="text-xs text-surface-variant font-medium">Quantity: {item.qty}</p>
-                        </div>
-                      </div>
-                      <span className="font-black text-forest">${item.price.toFixed(2)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-forest/5 p-6 rounded-[30px] border border-forest/10">
-                <div className="flex justify-between items-center pt-4">
-                  <span className="text-xl font-black text-forest">Amount Paid</span>
-                  <span className="text-3xl font-black text-sage-dark tracking-tighter">${selectedBooking.total.toFixed(2)}</span>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => setSelectedBooking(null)}
-                className="w-full mt-10 py-4 btn-primary rounded-2xl font-bold flex items-center justify-center gap-2 group overflow-hidden relative shadow-lg"
-              >
-                <span className="material-symbols-outlined text-white transition-transform group-hover:rotate-12">event_available</span>
-                Rebook Appointment
-                <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

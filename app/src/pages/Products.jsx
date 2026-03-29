@@ -1,8 +1,8 @@
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
-import { useMascotStore } from '../stores/useMascotStore';
+import { useMascotStore } from '../stores/useMascotStore.ts';
 import { useAuthStore } from '../stores/useAuthStore';
+import { supabase } from '../supabaseClient';
 
 const sortOptions = [
   { label: 'Recommended', value: 'default' },
@@ -106,9 +106,9 @@ const dummyData = [
 const ITEMS_PER_PAGE = 50;
 
 export default function Products({ onAddToCart }) {
-  const [allProducts] = useState(dummyData);
-  const [loading] = useState(false);
-  const [error] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -120,32 +120,43 @@ export default function Products({ onAddToCart }) {
   
 
   // Fetch Products from Supabase
-  // useEffect(() => {
-  //   // Wait for Supabase to restore session on F5 to prevent request queue from hanging
-  //   if (isAuthLoading) return;
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-  //   console.log("fetching data")
-  //   const fetchProducts = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const { data, error } = await supabase
-  //         .from('products')
-  //         .select('*');
-  //       console.log("data: ", data)
-  //       if (error) throw error;
-  //       setAllProducts(data || []);
-  //     } catch (err) {
-  //       console.error('Error fetching products:', err.message);
-  //       setError(err.message);
-  //     } finally {
-  //       console.log("hehehehe")
-  //       setAllProducts(dummyData)
-  //       setLoading(false);
-  //     }
-  //   };
+        if (error) throw error;
+        
+        if (isMounted) {
+          setAllProducts(data || []);
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err.message);
+        if (isMounted) {
+          setError(err.message);
+          // Fallback to dummy data if database fetch fails
+          setAllProducts(dummyData);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
 
-  //   fetchProducts();
-  // }, [isAuthLoading]);
+    fetchProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
 
 

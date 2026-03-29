@@ -21,6 +21,7 @@ const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderHistory = lazy(() => import('./pages/OrderHistory'));
 const SpaBookingHistory = lazy(() => import('./pages/SpaBookingHistory'));
 const HotelBookingHistory = lazy(() => import('./pages/HotelBookingHistory'));
+const Profile = lazy(() => import('./pages/Profile'));
 
 function ProtectedRoute({ children, user, onAuthOpen }) {
   useEffect(() => {
@@ -38,7 +39,7 @@ function ProtectedRoute({ children, user, onAuthOpen }) {
 
 function AnimatedRoutes({ onAddToCart, onBook, user, onAuthOpen }) {
   const location = useLocation();
-  const mascotRoutes = ['/products', '/spa', '/hotel', '/orders'];
+  const mascotRoutes = ['/'];
   const showMascot = mascotRoutes.includes(location.pathname);
 
   // Reset scroll on navigation
@@ -92,6 +93,11 @@ function AnimatedRoutes({ onAddToCart, onBook, user, onAuthOpen }) {
               <Route path="/hotel-bookings" element={
                 <ProtectedRoute user={user} onAuthOpen={onAuthOpen}>
                   <HotelBookingHistory />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute user={user} onAuthOpen={onAuthOpen}>
+                  <Profile />
                 </ProtectedRoute>
               } />
               <Route path="*" element={<Navigate to="/" replace />} />
@@ -190,10 +196,12 @@ export default function App() {
     initializeAuth();
 
     // 3. Listen auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setUser(session?.user ?? null);
-        if (session?.user) await fetchProfile(session.user);
+        if (session?.user) {
+          fetchProfile(session.user).catch(console.error);
+        }
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setProfile(null);
