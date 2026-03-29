@@ -127,8 +127,8 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [flyingItems, setFlyingItems] = useState([]);
-  const { user, setUser, setProfile, setLoading, loading } = useAuthStore();
-  const showLoadingScreen = useMinimumLoading(loading, 1500);
+  const { user, setUser, setProfile, setLoading, isLoading } = useAuthStore();
+  const showLoadingScreen = useMinimumLoading(isLoading, 1500);
 
   useEffect(() => {
     const fetchProfile = async (user) => {
@@ -183,8 +183,11 @@ export default function App() {
     //   }
     // });
 
+    let initialized = false;
+
     const initializeAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      initialized = true;
       if (session?.user) {
         setUser(session.user);
         await fetchProfile(session.user);
@@ -195,8 +198,9 @@ export default function App() {
 
     initializeAuth();
 
-    // 3. Listen auth changes
+    // Listen for auth changes — skip the initial SIGNED_IN that mirrors getSession
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!initialized) return; // still in initial load, handled by initializeAuth
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setUser(session?.user ?? null);
         if (session?.user) {

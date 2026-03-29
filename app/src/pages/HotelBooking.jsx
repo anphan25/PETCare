@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { defaultPets } from '../data/products';
@@ -40,15 +40,30 @@ const hotelSuites = [
 export default function HotelBooking({ onBook }) {
   const today = new Date();
   const [selectedPet, setSelectedPet] = useState(defaultPets[0]);
-  const [selectedSuite, setSelectedSuite] = useState(hotelSuites[1].id);
+  const [selectedSuite, setSelectedSuite] = useState(hotelSuites[0].id);
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear] = useState(today.getFullYear());
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useAuthStore();
   const navigate = useNavigate();
+
+  const resetForm = () => {
+    setSelectedPet(defaultPets[0]);
+    setSelectedSuite(hotelSuites[0].id);
+    setCheckIn(null);
+    setCheckOut(null);
+    setCurrentMonth(today.getMonth());
+    setBookingConfirmed(false);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    resetForm();
+  };
   
   const setWagging = useMascotStore((state) => state.setWagging);
   const triggerJump = useMascotStore((state) => state.triggerJump);
@@ -120,11 +135,8 @@ export default function HotelBooking({ onBook }) {
       if (error) throw error;
 
       setBookingConfirmed(true);
+      setShowModal(true);
       triggerJump();
-      
-      setTimeout(() => {
-        navigate('/hotel-bookings');
-      }, 2000);
     } catch (err) {
       console.error('Hotel booking error:', err.message);
       alert('Failed to confirm reservation. Please try again.');
@@ -417,29 +429,37 @@ export default function HotelBooking({ onBook }) {
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={(!isSubmitting && !bookingConfirmed && checkIn && checkOut) ? { scale: 1.02 } : {}}
+                whileTap={(!isSubmitting && !bookingConfirmed && checkIn && checkOut) ? { scale: 0.98 } : {}}
                 onClick={handleConfirm}
-                disabled={isSubmitting || bookingConfirmed}
-                className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all ${
-                  (!isSubmitting && !bookingConfirmed)
-                    ? 'bg-forest text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-forest/30'
+                disabled={isSubmitting || bookingConfirmed || !checkIn || !checkOut}
+                className={`group w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all duration-300 relative overflow-hidden ${
+                  (!isSubmitting && !bookingConfirmed && checkIn && checkOut)
+                    ? 'bg-forest text-white shadow-xl shadow-forest/30 hover:shadow-2xl hover:shadow-forest/50'
                     : 'bg-outline-variant/30 text-outline cursor-not-allowed shadow-none'
                 }`}
               >
-                {isSubmitting ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : bookingConfirmed ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="material-symbols-outlined">check_circle</span>
-                    <span>Sanctuary Confirmed!</span>
-                  </div>
-                ) : (
-                  <>
-                    <span>Confirm Booking</span>
-                    <span className="material-symbols-outlined text-xl">arrow_forward</span>
-                  </>
+                {/* Hover Gradient Overlay */}
+                {(!isSubmitting && !bookingConfirmed && checkIn && checkOut) && (
+                  <div className="absolute inset-0 bg-linear-to-r from-forest via-sage-dark to-forest opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 )}
+
+                <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+                  {isSubmitting ? (
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : bookingConfirmed ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="material-symbols-outlined">check_circle</span>
+                      <span>Sanctuary Confirmed!</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-y-0.5 group-hover:text-sage-light" style={{ fontVariationSettings: "'FILL' 1" }}>hotel_class</span>
+                      <span className="transition-all duration-300 group-hover:tracking-wide">Confirm Booking</span>
+                      <span className="material-symbols-outlined text-xl transition-all duration-300 group-hover:translate-x-1.5 group-hover:scale-110 group-hover:text-sage-light">arrow_forward</span>
+                    </>
+                  )}
+                </div>
               </motion.button>
 
               <div className="mt-6 flex justify-center items-center gap-2 text-[10px] sm:text-xs text-surface-variant/70 font-bold uppercase tracking-widest">
@@ -450,6 +470,81 @@ export default function HotelBooking({ onBook }) {
           </div>
         </div>
       </main>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+            style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0.18)' }}
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 40 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-3xl p-10 max-w-md w-full text-center shadow-2xl antigravity-shadow relative"
+              style={{ backgroundColor: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.7)' }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/40 hover:bg-white/60 flex items-center justify-center transition-all"
+              >
+                <span className="material-symbols-outlined text-charcoal/60 text-lg">close</span>
+              </button>
+              {/* Animated checkmark */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.15, type: 'spring', stiffness: 260, damping: 20 }}
+                className="w-24 h-24 rounded-full bg-sage-dark/10 flex items-center justify-center mx-auto mb-6 ring-4 ring-sage-dark/20"
+              >
+                <span
+                  className="material-symbols-outlined text-sage-dark"
+                  style={{ fontSize: 52, fontVariationSettings: "'FILL' 1" }}
+                >
+                  check_circle
+                </span>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+                <p className="text-xs uppercase tracking-[0.2em] font-bold text-sage-dark mb-2">Reservation Confirmed</p>
+                <h2 className="text-3xl font-black text-forest mb-3">Sanctuary Booked!</h2>
+                <p className="text-surface-variant text-sm leading-relaxed mb-2">
+                  <span className="font-bold text-charcoal">{selectedPet?.name}</span> is all set at the
+                  <span className="font-bold text-charcoal"> {suiteDetails?.name}</span>.
+                </p>
+                <p className="text-surface-variant text-sm mb-8">
+                  {checkIn && checkOut
+                    ? `${monthNames[currentMonth].slice(0, 3)} ${checkIn} → ${monthNames[currentMonth].slice(0, 3)} ${checkOut} · ${duration} nights`
+                    : ''}
+                </p>
+
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/20 py-2.5 rounded-full mb-6">
+                  <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                  Safe Stay Certified • Vet on-call 24/7
+                </div>
+
+                <button
+                  onClick={() => { closeModal(); navigate('/hotel-bookings'); }}
+                  className="w-full py-3.5 rounded-full bg-forest text-white font-bold text-base shadow-xl shadow-forest/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-xl">receipt_long</span>
+                  View My Bookings
+                </button>
+
+
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

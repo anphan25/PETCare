@@ -3,6 +3,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useMascotStore } from '../stores/useMascotStore.ts';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
+import PageLoader from '../components/PageLoader';
+import { useMinimumLoading } from '../hooks/useMinimumLoading';
 
 const sortOptions = [
   { label: 'Recommended', value: 'default' },
@@ -108,6 +110,7 @@ const ITEMS_PER_PAGE = 50;
 export default function Products({ onAddToCart }) {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const showLoader = useMinimumLoading(loading, 1500);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -388,14 +391,12 @@ export default function Products({ onAddToCart }) {
           })}
         </motion.div>
 
+        {showLoader ? (
+          <PageLoader label="Loading products" />
+        ) : (
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <AnimatePresence mode="popLayout">
-            {loading ? (
-              // Loading Skeleton
-              [...Array(8)].map((_, i) => (
-                <div key={i} className="glass-panel h-[400px] rounded-2xl animate-pulse bg-white/20" />
-              ))
-            ) : processedProducts.map((product, i) => (
+            {processedProducts.map((product, i) => (
               <motion.div
                 key={product.id}
                 layoutId={`product-card-${product.id}`}
@@ -477,8 +478,9 @@ export default function Products({ onAddToCart }) {
             ))}
           </AnimatePresence>
         </motion.div>
+        )}
 
-        {allProducts.length === 0 && (
+        {!showLoader && allProducts.length === 0 && (
           <div className="py-20 text-center text-surface-variant">
             <span className="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
             <p className="text-xl">No products found.</p>

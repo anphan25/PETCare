@@ -23,9 +23,24 @@ export default function SpaBooking({ onBook }) {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear] = useState(today.getFullYear());
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useAuthStore();
   const navigate = useNavigate();
+
+  const resetForm = () => {
+    setSelectedPet(defaultPets[0]);
+    setSelectedServices([spaServices[1].id]);
+    setSelectedDate(null);
+    setSelectedTime('10:30 AM');
+    setCurrentMonth(today.getMonth());
+    setBookingConfirmed(false);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    resetForm();
+  };
   const setWagging = useMascotStore((state) => state.setWagging);
   const triggerJump = useMascotStore((state) => state.triggerJump);
 
@@ -87,12 +102,8 @@ export default function SpaBooking({ onBook }) {
       if (error) throw error;
 
       setBookingConfirmed(true);
+      setShowModal(true);
       triggerJump();
-      
-      // Navigate after a delay to show the success state
-      setTimeout(() => {
-        navigate('/spa-bookings');
-      }, 2000);
     } catch (err) {
       console.error('Spa booking error:', err.message);
       alert('Failed to confirm booking. Please try again.');
@@ -375,25 +386,33 @@ export default function SpaBooking({ onBook }) {
               <button
                 onClick={handleConfirm}
                 disabled={selectedServices.length === 0 || !selectedDate || !selectedTime || isSubmitting || bookingConfirmed}
-                className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all ${
+                className={`group w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg flex items-center justify-center space-x-3 transition-all duration-300 relative overflow-hidden ${
                   (selectedServices.length > 0 && selectedDate && selectedTime && !isSubmitting && !bookingConfirmed)
-                    ? 'bg-sage-dark text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-sage-dark/30'
+                    ? 'bg-sage-dark text-white hover:scale-[1.02] active:scale-95 shadow-xl shadow-sage-dark/30 hover:shadow-2xl hover:shadow-sage-dark/50'
                     : 'bg-outline-variant/30 text-outline cursor-not-allowed shadow-none'
                 }`}
               >
-                {isSubmitting ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : bookingConfirmed ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="material-symbols-outlined">check_circle</span>
-                    <span>Sanctuary Confirmed!</span>
-                  </div>
-                ) : (
-                  <>
-                    <span>Confirm Booking</span>
-                    <span className="material-symbols-outlined">arrow_forward</span>
-                  </>
+                {/* Hover Gradient Overlay */}
+                {(selectedServices.length > 0 && selectedDate && selectedTime && !isSubmitting && !bookingConfirmed) && (
+                  <div className="absolute inset-0 bg-linear-to-r from-sage-dark via-forest to-sage-dark opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 )}
+
+                <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+                  {isSubmitting ? (
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : bookingConfirmed ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="material-symbols-outlined">check_circle</span>
+                      <span>Sanctuary Confirmed!</span>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="material-symbols-outlined text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:-translate-y-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
+                      <span className="transition-all duration-300 group-hover:tracking-wide">Confirm Booking</span>
+                      <span className="material-symbols-outlined text-xl transition-all duration-300 group-hover:translate-x-1.5 group-hover:scale-110">arrow_forward</span>
+                    </>
+                  )}
+                </div>
               </button>
 
 
@@ -421,20 +440,79 @@ export default function SpaBooking({ onBook }) {
         </div>
       </main>
 
-      {/* Booking Confirmation Toast */}
+      {/* Success Modal */}
       <AnimatePresence>
-        {bookingConfirmed && (
+        {showModal && (
           <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-80 glass-panel-strong px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+            style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0.18)' }}
+            onClick={closeModal}
           >
-            <span className="material-symbols-outlined text-sage-dark text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            <div>
-              <p className="font-bold text-forest">Booking Confirmed!</p>
-              <p className="text-sm text-surface-variant">Your spa appointment has been saved.</p>
-            </div>
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 40 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-3xl p-10 max-w-md w-full text-center shadow-2xl antigravity-shadow relative"
+              style={{ backgroundColor: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.7)' }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/40 hover:bg-white/60 flex items-center justify-center transition-all"
+              >
+                <span className="material-symbols-outlined text-charcoal/60 text-lg">close</span>
+              </button>
+              {/* Animated checkmark */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.15, type: 'spring', stiffness: 260, damping: 20 }}
+                className="w-24 h-24 rounded-full bg-sage-dark/10 flex items-center justify-center mx-auto mb-6 ring-4 ring-sage-dark/20"
+              >
+                <span
+                  className="material-symbols-outlined text-sage-dark"
+                  style={{ fontSize: 52, fontVariationSettings: "'FILL' 1" }}
+                >
+                  check_circle
+                </span>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+                <p className="text-xs uppercase tracking-[0.2em] font-bold text-sage-dark mb-2">Appointment Confirmed</p>
+                <h2 className="text-3xl font-black text-forest mb-3">Spa Booked!</h2>
+                <p className="text-surface-variant text-sm leading-relaxed mb-2">
+                  <span className="font-bold text-charcoal">{selectedPet?.name}</span>'s spa session is all set.
+                </p>
+                <p className="text-surface-variant text-sm mb-2">
+                  {selectedServiceDetails.map(s => s.name).join(' + ')}
+                </p>
+                <p className="text-surface-variant text-sm mb-8">
+                  {selectedDate
+                    ? `${monthNames[currentMonth]} ${selectedDate}, ${currentYear} · ${selectedTime}`
+                    : ''}
+                </p>
+
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/20 py-2.5 rounded-full mb-6">
+                  <span className="material-symbols-outlined text-[16px]">spa</span>
+                  Premium Care • Certified Groomer
+                </div>
+
+                <button
+                  onClick={() => { closeModal(); navigate('/spa-bookings'); }}
+                  className="w-full py-3.5 rounded-full bg-sage-dark text-white font-bold text-base shadow-xl shadow-sage-dark/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-xl">receipt_long</span>
+                  View My Bookings
+                </button>
+
+
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

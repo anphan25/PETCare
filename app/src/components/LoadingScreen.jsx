@@ -57,23 +57,24 @@ export default function LoadingScreen() {
           />
         ))}
 
-        {/* 3. Main Icon Animation with Heartbeat effect */}
+        {/* 3. Main Logo Animation with Heartbeat effect */}
         <motion.div
           animate={{
-            scale: [1, 1.1, 1], 
-            rotate: [0, 5, -5, 0],
-            filter: ["drop-shadow(0px 0px 8px rgba(157,192,139,0.3))", "drop-shadow(0px 0px 25px rgba(157,192,139,0.7))", "drop-shadow(0px 0px 8px rgba(157,192,139,0.3))"]
+            scale: [1, 1.06, 1], 
+            filter: ["drop-shadow(0px 0px 8px rgba(157,192,139,0.3))", "drop-shadow(0px 0px 30px rgba(157,192,139,0.8))", "drop-shadow(0px 0px 8px rgba(157,192,139,0.3))"]
           }}
           transition={{
             duration: 2.5, 
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="relative z-20 text-forest bg-white/40 backdrop-blur-md p-6 sm:p-7 rounded-full border border-white/50 shadow-2xl"
+          className="relative z-20"
         >
-          <span className="material-symbols-outlined text-[70px] sm:text-[90px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-            pets
-          </span>
+          <img
+            src="/logo-transparent.png"
+            alt="PETCare"
+            className="w-[120px] sm:w-[148px] h-auto object-contain"
+          />
         </motion.div>
 
         {/* 4. Magic Dust Particles (3D Orbits) */}
@@ -109,20 +110,7 @@ export default function LoadingScreen() {
         <h2 className="text-3xl sm:text-4xl font-black text-forest tracking-tight mb-3">
           Preparing...
         </h2>
-        
-        {/* Mini progress indicator (Bouncing dots) */}
-        <div className="flex items-center justify-center gap-2.5">
-          {[...Array(3)].map((_, i) => (
-            <motion.div
-              key={`dot-${i}`}
-              animate={{ y: [0, -8, 0], backgroundColor: ['#9DC08B', '#40513B', '#9DC08B'] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
-              className="w-2.5 h-2.5 rounded-full bg-sage-dark shadow-sm"
-            />
-          ))}
-        </div>
-        
-        <p className="mt-6 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-surface-variant/70">
+        <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-surface-variant/70">
           Curating the ultimate luxury
         </p>
       </motion.div>

@@ -64,9 +64,17 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo */}
-        <NavLink to="/" className="flex items-center gap-2 text-lg sm:text-xl font-black text-sage-dark shrink-0">
-          <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
-          <span className="hidden sm:inline">PETCare</span>
+        <NavLink to="/" className="flex items-center gap-2 group shrink-0">
+          <img 
+            src="/logo-transparent.png" 
+            alt="PETCare Logo" 
+            className="h-9 sm:h-11 w-auto object-contain drop-shadow-[0_2px_10px_rgba(71,102,58,0.2)] transition-transform duration-300 group-hover:scale-105 group-active:scale-95" 
+          />
+          <div className="flex flex-col -mb-1">
+            <span className="text-xl sm:text-2xl font-black text-forest -tracking-[0.05em] leading-none">
+              PET<span className="text-sage-dark font-light">Care</span>
+            </span>
+          </div>
         </NavLink>
 
         {/* Desktop Nav */}

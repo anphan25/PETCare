@@ -37,10 +37,21 @@ export default function Dashboard({ onAddToCart }) {
           className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 mb-32"
         >
           <div className="lg:w-1/2 space-y-6 sm:space-y-8 z-10">
-            <motion.div variants={fadeInUp} className="inline-flex items-center space-x-2 bg-white/40 px-4 py-2 rounded-full border border-white/50 shadow-sm backdrop-blur-md">
-              <span className="material-symbols-outlined text-sage-dark text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
-              <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-sage-dark">Tokyo's Premier Pet Sanctuary</span>
-            </motion.div>
+          {/* Ambient Logo Watermark */}
+          <motion.img
+            src="/logo-transparent.png"
+            alt=""
+            aria-hidden="true"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.06, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="absolute -top-16 -left-20 w-[360px] sm:w-[480px] h-auto select-none pointer-events-none"
+          />
+
+          <motion.div variants={fadeInUp} className="inline-flex items-center gap-3">
+            <img src="/logo-transparent.png" alt="PETCare" className="h-8 w-auto object-contain" />
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-sage-dark">Tokyo's Premier Pet Sanctuary</span>
+          </motion.div>
             
             <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-black text-forest leading-[1.1] tracking-tight">
               A World of <br/>
