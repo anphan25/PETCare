@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -22,12 +22,18 @@ const OrderHistory = lazy(() => import('./pages/OrderHistory'));
 const SpaBookingHistory = lazy(() => import('./pages/SpaBookingHistory'));
 const HotelBookingHistory = lazy(() => import('./pages/HotelBookingHistory'));
 const Profile = lazy(() => import('./pages/Profile'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
 
 function ProtectedRoute({ children, user, onAuthOpen }) {
+  const wasLoggedIn = useRef(!!user);
+
   useEffect(() => {
-    if (!user) {
+    // Only open modal when user deliberately visits a protected route
+    // without being logged in — NOT when they just logged out.
+    if (!user && !wasLoggedIn.current) {
       onAuthOpen();
     }
+    wasLoggedIn.current = !!user;
   }, [user, onAuthOpen]);
 
   if (!user) {
@@ -98,6 +104,11 @@ function AnimatedRoutes({ onAddToCart, onBook, user, onAuthOpen }) {
               <Route path="/profile" element={
                 <ProtectedRoute user={user} onAuthOpen={onAuthOpen}>
                   <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/wishlist" element={
+                <ProtectedRoute user={user} onAuthOpen={onAuthOpen}>
+                  <Wishlist onAddToCart={onAddToCart} />
                 </ProtectedRoute>
               } />
               <Route path="*" element={<Navigate to="/" replace />} />

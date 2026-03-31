@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
 import { useMascotStore } from '../stores/useMascotStore.ts';
 import { useAuthStore } from '../stores/useAuthStore';
+import { useWishlistStore } from '../stores/useWishlistStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
@@ -118,8 +119,11 @@ export default function Products({ onAddToCart }) {
   const [activeSort, setActiveSort] = useState('default');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [favorites, setFavorites] = useState([]);
   const [isSortOpen, setIsSortOpen] = useState(false);
+
+  // Wishlist
+  const { user } = useAuthStore();
+  const { wishlistIds, fetchWishlist, toggleWishlist } = useWishlistStore();
   
 
   // Fetch Products from Supabase
@@ -161,6 +165,12 @@ export default function Products({ onAddToCart }) {
     };
   }, []);
 
+  // Fetch wishlist from Supabase when user is available
+  useEffect(() => {
+    if (user) fetchWishlist(user.id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
 
 
   const categories = useMemo(() => {
@@ -180,7 +190,8 @@ export default function Products({ onAddToCart }) {
   const triggerJump = useMascotStore((state) => state.triggerJump);
 
   const toggleFav = (id) => {
-    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+    if (!user) return;
+    toggleWishlist(user.id, id);
   };
 
   const handleAddToCart = (e, product) => {
@@ -426,7 +437,7 @@ export default function Products({ onAddToCart }) {
                     onClick={(e) => { e.stopPropagation(); toggleFav(product.id); }}
                     className="absolute bottom-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center"
                   >
-                    <span className="material-symbols-outlined text-earth-rose" style={{ fontVariationSettings: favorites.includes(product.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                    <span className="material-symbols-outlined text-earth-rose" style={{ fontVariationSettings: wishlistIds.has(product.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                   </motion.button>
                 </div>
                 
@@ -616,7 +627,7 @@ export default function Products({ onAddToCart }) {
                         onClick={() => toggleFav(selectedItem.id)}
                         className="w-12 h-12 sm:w-14 sm:h-14 glass-panel rounded-2xl flex items-center justify-center shrink-0"
                       >
-                        <span className="material-symbols-outlined text-earth-rose text-xl sm:text-2xl" style={{ fontVariationSettings: favorites.includes(selectedItem.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                        <span className="material-symbols-outlined text-earth-rose text-xl sm:text-2xl" style={{ fontVariationSettings: wishlistIds.has(selectedItem.id) ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                       </motion.button>
                     </div>
                   </div>

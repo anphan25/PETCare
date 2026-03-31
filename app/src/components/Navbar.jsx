@@ -173,6 +173,14 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                       <span className="material-symbols-outlined text-[18px] text-sage">person</span>
                       My Profile
                     </NavLink>
+                    <NavLink 
+                      to="/wishlist"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-[18px] text-earth-rose" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                      My Wishlist
+                    </NavLink>
                     <button 
                       onClick={() => setUserMenuOpen(false)}
                       className="w-full text-left"
