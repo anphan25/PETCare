@@ -219,7 +219,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-1.5 sm:p-2 hover:bg-white/30 rounded-full shrink-0"
+            className={`${!user ? 'hidden' : 'md:hidden'} p-1.5 sm:p-2 hover:bg-white/30 rounded-full shrink-0`}
           >
             <span className="material-symbols-outlined text-sage-dark text-[26px]">
               {mobileOpen ? 'close' : 'menu'}
