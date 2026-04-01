@@ -4,10 +4,12 @@ import { useCart } from '../hooks/useStore';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuthStore } from '../stores/useAuthStore';
+import { useTranslation } from 'react-i18next';
 
 export default function Checkout() {
   const { cart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeDelivery, setActiveDelivery] = useState('standard');
   const [showSuccess, setShowSuccess] = useState(false);
   const [confettiItems] = useState(() => {
@@ -53,12 +55,12 @@ export default function Checkout() {
     console.log("Form Data:", formData);
 
     if (!user) {
-      alert("Please sign in to complete your sanctuary order.");
+      alert(t('auth.pleaseSignIn'));
       return;
     }
 
     if (!formData.fullName || !formData.address || !formData.city) {
-      alert("Please fill in all shipping details for your pet's delivery.");
+      alert(t('auth.fillShipping'));
       return;
     }
 
@@ -133,11 +135,11 @@ export default function Checkout() {
       <div className="mesh-gradient min-h-screen flex items-center justify-center p-6">
         <div className="glass-panel p-12 rounded-3xl text-center max-w-lg shadow-2xl">
           <span className="material-symbols-outlined text-6xl text-sage-dark mb-6 scale-125 block">shopping_cart_off</span>
-          <h2 className="text-3xl font-bold text-forest mb-4">Your Sanctuary is Empty</h2>
-          <p className="text-surface-variant mb-10 leading-relaxed">It looks like you haven't added any premium pet supplies yet. Let's find something your pet will love!</p>
+          <h2 className="text-3xl font-bold text-forest mb-4">{t('checkout.emptyCartTitle')}</h2>
+          <p className="text-surface-variant mb-10 leading-relaxed">{t('checkout.emptyCartDescription')}</p>
           <Link to="/products" className="btn-primary inline-flex items-center gap-2 px-8 py-4 text-lg">
             <span className="material-symbols-outlined text-xl">arrow_back</span>
-            Back to Shop
+            {t('checkout.backToShop')}
           </Link>
         </div>
       </div>
@@ -170,7 +172,7 @@ export default function Checkout() {
               <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
               Secure Sanctuary Checkout
             </div>
-            <h1 className="text-3xl sm:text-5xl font-black text-forest tracking-tight">Complete Your Order</h1>
+            <h1 className="text-3xl sm:text-5xl font-black text-forest tracking-tight">{t('checkout.completeOrder')}</h1>
           </div>
         </div>
 
@@ -185,11 +187,11 @@ export default function Checkout() {
             >
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-10 h-10 rounded-xl bg-sage-dark text-white flex items-center justify-center font-black shadow-lg shadow-sage-dark/20">1</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">Shipping Sanctuary</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">{t('checkout.shippingSanctuary')}</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="col-span-1 md:col-span-2 space-y-2">
-                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Full Sanctuary Name</label>
+                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.fullName')}</label>
                   <div className="relative">
                     <input 
                       name="fullName"
@@ -203,7 +205,7 @@ export default function Checkout() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Delivery Address</label>
+                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.deliveryAddress')}</label>
                   <div className="relative">
                     <input 
                       name="address"
@@ -217,7 +219,7 @@ export default function Checkout() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Forest City</label>
+                  <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.city')}</label>
                   <div className="relative">
                     <input 
                       name="city"
@@ -242,7 +244,7 @@ export default function Checkout() {
             >
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-10 h-10 rounded-xl bg-sage-dark text-white flex items-center justify-center font-black shadow-lg shadow-sage-dark/20">2</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">Delivery Speed</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">{t('checkout.deliverySpeed')}</h2>
               </div>
               <div className="space-y-4">
                 {deliveryOptions.map(option => (
@@ -288,13 +290,13 @@ export default function Checkout() {
             >
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-10 h-10 rounded-xl bg-sage-dark text-white flex items-center justify-center font-black shadow-lg shadow-sage-dark/20">3</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">Payment Sanctuary</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-charcoal">{t('checkout.paymentSanctuary')}</h2>
               </div>
               
               <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 space-y-5 order-2 md:order-1">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Card Number</label>
+                    <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.cardNumber')}</label>
                     <div className="relative">
                       <input type="text" placeholder="•••• •••• •••• ••••" className="checkout-input h-14 pl-12 peer" />
                       <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-sage-dark/60 peer-hover:text-sage peer-focus:text-sage transition-all duration-300 text-[20px] pointer-events-none">credit_card</span>
@@ -302,11 +304,11 @@ export default function Checkout() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">Expiry</label>
+                      <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.expiry')}</label>
                       <input type="text" placeholder="MM/YY" className="checkout-input h-14 text-center" />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">CVV</label>
+                      <label className="text-xs font-bold text-surface-variant uppercase tracking-widest ml-1">{t('checkout.cvv')}</label>
                       <input type="text" placeholder="•••" className="checkout-input h-14 text-center" />
                     </div>
                   </div>
@@ -320,7 +322,7 @@ export default function Checkout() {
                     <span className="material-symbols-outlined scale-125">payments</span>
                   </div>
                   <div className="space-y-1 relative z-10">
-                    <p className="text-sm opacity-50 font-mono tracking-widest uppercase">Member Card</p>
+                    <p className="text-sm opacity-50 font-mono tracking-widest uppercase">{t('checkout.memberCard')}</p>
                     <p className="text-lg font-mono tracking-widest leading-none">•••• •••• •••• 4422</p>
                   </div>
                 </div>
@@ -339,7 +341,7 @@ export default function Checkout() {
                 <span className="material-symbols-outlined text-8xl" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
               </div>
               
-              <h3 className="text-2xl font-black text-forest mb-8">Order Summary</h3>
+              <h3 className="text-2xl font-black text-forest mb-8">{t('checkout.orderSummary')}</h3>
               
               <div className="space-y-6 max-h-[40vh] overflow-y-auto pr-2 scrollbar-hide mb-8">
                 {cart.map(item => (
@@ -358,19 +360,19 @@ export default function Checkout() {
 
               <div className="bg-white/40 p-5 sm:p-6 rounded-xl mb-6 space-y-2 border border-white/40 shadow-inner">
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-surface-variant font-medium">Subtotal</span>
+                  <span className="text-surface-variant font-medium">{t('common.subtotal')}</span>
                   <span className="font-bold">${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-surface-variant font-medium">Service Tax (5%)</span>
+                  <span className="text-surface-variant font-medium">{t('checkout.serviceTax')}</span>
                   <span className="font-bold">${tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-surface-variant font-medium">Delivery</span>
-                  <span className="font-bold text-sage-dark">{deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}</span>
+                  <span className="text-surface-variant font-medium">{t('checkout.delivery')}</span>
+                  <span className="font-bold text-sage-dark">{deliveryFee === 0 ? t('common.free') : `$${deliveryFee.toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between items-center pt-3 sm:pt-4 mt-2 border-t border-white/40">
-                  <span className="text-base sm:text-lg font-bold">Grand Total</span>
+                  <span className="text-base sm:text-lg font-bold">{t('checkout.grandTotal')}</span>
                   <span className="text-xl sm:text-2xl font-black text-sage-dark">${grandTotal.toFixed(2)}</span>
                 </div>
               </div>
@@ -394,12 +396,12 @@ export default function Checkout() {
                 {loading ? (
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Processing...</span>
+                    <span>{t('checkout.processing')}</span>
                   </div>
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-white transition-transform group-hover:rotate-12">auto_awesome</span>
-                    Place Order Now
+                    {t('checkout.placeOrderNow')}
                   </>
                 )}
                 <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -407,7 +409,7 @@ export default function Checkout() {
               
               <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-variant/60">
                 <span className="material-symbols-outlined text-[14px]">verified</span>
-                Secured by Sanctuary Encryption
+                {t('checkout.securedByEncryption')}
               </div>
             </motion.div>
           </div>
@@ -427,10 +429,10 @@ export default function Checkout() {
               <div className="w-20 h-20 bg-sage-dark text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                 <span className="material-symbols-outlined text-4xl font-black">check</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-forest mb-6 tracking-tight">Place Order Successfully</h2>
+              <h2 className="text-3xl sm:text-4xl font-black text-forest mb-6 tracking-tight">{t('checkout.orderSuccess')}</h2>
               <div className="flex items-center justify-center gap-2 text-sage-dark font-bold text-sm uppercase tracking-widest mt-4">
                 <span className="w-2 h-2 rounded-full bg-sage-dark animate-ping" />
-                Redirect to order history...
+                {t('checkout.redirectToHistory')}
               </div>
             </motion.div>
             

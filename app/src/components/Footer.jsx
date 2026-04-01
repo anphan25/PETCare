@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="w-full py-12 bg-white/10 backdrop-blur-md mt-auto border-t border-white/30">
       <div className="flex flex-col md:flex-row justify-between items-center px-8 lg:px-12 max-w-7xl mx-auto gap-6">
@@ -17,13 +20,13 @@ export default function Footer() {
           </div>
         </NavLink>
         <div className="flex flex-wrap justify-center gap-8 text-xs font-light tracking-wide">
-          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">Privacy Policy</NavLink>
-          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">Terms of Service</NavLink>
-          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">Contact Us</NavLink>
-          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">Pet Care Tips</NavLink>
+          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">{t('footer.privacyPolicy')}</NavLink>
+          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">{t('footer.termsOfService')}</NavLink>
+          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">{t('footer.contactUs')}</NavLink>
+          <NavLink to="/" className="text-surface-variant opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300">{t('footer.petCareTips')}</NavLink>
         </div>
         <div className="text-xs font-light tracking-wide text-surface-variant opacity-60">
-          © 2026 PETCare Ethereal Sanctuary. All rights reserved.
+          {t('footer.copyright')}
         </div>
       </div>
     </footer>

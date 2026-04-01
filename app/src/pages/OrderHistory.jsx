@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient';
 import { useAuthStore } from '../stores/useAuthStore';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
+import { useTranslation } from 'react-i18next';
 
 const getStatusConfig = (status) => {
   switch (status?.toLowerCase()) {
@@ -23,6 +24,7 @@ const getStatusConfig = (status) => {
 
 export default function OrderHistory() {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const showLoader = useMinimumLoading(isLoading, 1500);
   const [userOrders, setUserOrders] = useState([]);
@@ -108,16 +110,16 @@ export default function OrderHistory() {
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </Link>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">Order History</h1>
+            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">{t('orderHistory.title')}</h1>
             <p className="text-lg text-surface-variant max-w-xl leading-relaxed">
-              Review your past purchases and reorder sanctuary essentials for your beloved companions.
+              {t('orderHistory.description')}
             </p>
           </motion.div>
         </header>
 
         <div className="space-y-6">
           {showLoader ? (
-            <PageLoader label="Loading your orders" />
+            <PageLoader label={t('orderHistory.loadingOrders')} />
           ) : userOrders.length > 0 ? (
             userOrders.map((order, index) => (
               <motion.div
@@ -163,7 +165,7 @@ export default function OrderHistory() {
 
                 <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 relative z-10 border-t md:border-t-0 md:border-l border-white/40 pt-6 md:pt-0 md:pl-10 shrink-0">
                   <div className="text-right">
-                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">Total Amount</span>
+                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">{t('orderHistory.totalAmount')}</span>
                     <span className="text-2xl font-black text-forest">${order.total.toFixed(2)}</span>
                   </div>
                   <div className="flex flex-col items-end gap-2">
@@ -173,7 +175,7 @@ export default function OrderHistory() {
                     </div>
                     <span className="text-[10px] font-bold text-sage-dark flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
                       <span className="material-symbols-outlined text-[13px]">info</span>
-                      View details
+                      {t('common.viewDetails')}
                     </span>
                   </div>
                 </div>
@@ -182,10 +184,10 @@ export default function OrderHistory() {
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-panel p-16 rounded-3xl text-center border border-white/40">
               <span className="material-symbols-outlined text-6xl text-sage-dark/30 mb-6 block">shopping_bag</span>
-              <h3 className="text-2xl font-bold text-forest mb-2">No Orders Yet</h3>
-              <p className="text-surface-variant mb-8">Your pet's sanctuary is waiting for its first premium items.</p>
+              <h3 className="text-2xl font-bold text-forest mb-2">{t('orderHistory.noOrdersTitle')}</h3>
+              <p className="text-surface-variant mb-8">{t('orderHistory.noOrdersDescription')}</p>
               <Link to="/products" className="btn-primary inline-flex items-center gap-2 px-8 py-4">
-                Explore Shop
+                {t('orderHistory.exploreShop')}
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </Link>
             </motion.div>
@@ -253,13 +255,13 @@ export default function OrderHistory() {
               <div className="p-7">
                 {/* Title */}
                 <div className="mb-5">
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">Order Summary</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">{t('orderHistory.orderSummary')}</p>
                   <p className="text-sm text-surface-variant">{selectedOrder.date}</p>
                 </div>
 
                 {/* Items list */}
                 <div className="mb-5 space-y-2.5 max-h-[180px] overflow-y-auto pr-1">
-                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2 mb-3">Items Ordered</h3>
+                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2 mb-3">{t('orderHistory.itemsOrdered')}</h3>
                   {selectedOrder.items.map((item, i) => (
                     <div key={i} className="flex items-center gap-3 bg-white/60 rounded-2xl p-3 border border-white/60">
                       <img src={item.image} alt={item.name} className="w-12 h-12 rounded-xl object-cover shadow-sm shrink-0" />
@@ -274,17 +276,17 @@ export default function OrderHistory() {
 
                 {/* Price breakdown */}
                 <div className="bg-forest/5 rounded-2xl p-5 border border-forest/8 mb-6 space-y-2.5">
-                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">Price Breakdown</h3>
+                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">{t('orderHistory.priceBreakdown')}</h3>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Subtotal</span>
+                    <span className="text-surface-variant">{t('common.subtotal')}</span>
                     <span className="font-bold text-charcoal">${selectedOrder.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Service Tax (5%)</span>
+                    <span className="text-surface-variant">{t('orderHistory.serviceTax')}</span>
                     <span className="font-bold text-charcoal">${selectedOrder.tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-forest/10">
-                    <span className="text-base font-black text-forest">Total Paid</span>
+                    <span className="text-base font-black text-forest">{t('orderHistory.totalPaid')}</span>
                     <span className="text-2xl font-black text-sage-dark tracking-tight">${selectedOrder.total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -292,7 +294,7 @@ export default function OrderHistory() {
                 {/* Footer badge */}
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/15 py-2.5 rounded-full">
                   <span className="material-symbols-outlined text-[15px]">verified</span>
-                  Sanctuary Certified • Premium Quality Guaranteed
+                  {t('orderHistory.certifiedBadge')}
                 </div>
               </div>
             </motion.div>

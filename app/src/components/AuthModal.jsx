@@ -3,11 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useMascotStore } from '../stores/useMascotStore';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthModal({ isOpen, onClose }) {
   const { user, profile } = useAuthStore();
   const setWagging = useMascotStore((state) => state.setWagging);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const signInWithGoogle = async () => {
     try {
@@ -74,7 +76,7 @@ export default function AuthModal({ isOpen, onClose }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                 >
-                  <p className="text-ivory text-base mb-8 font-medium">Welcome back!</p>
+                  <p className="text-ivory text-base mb-8 font-medium">{t('auth.welcomeBack')}</p>
                   
                   <button
                     onClick={signInWithGoogle}
@@ -89,7 +91,7 @@ export default function AuthModal({ isOpen, onClose }) {
                       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                       <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                     </svg>
-                    {loading ? 'Redirecting...' : 'Login with Gmail'}
+                    {loading ? t('auth.redirecting') : t('auth.loginWithGmail')}
                   </button>
                 </motion.div>
               ) : (
@@ -105,9 +107,9 @@ export default function AuthModal({ isOpen, onClose }) {
                   </div>
                   
                   <h3 className="text-xl font-bold text-forest mb-1">
-                    Hello, {profile?.full_name || user.user_metadata?.full_name?.split(' ')[0]}!
+                    {t('auth.hello', { name: profile?.full_name || user.user_metadata?.full_name?.split(' ')[0] })}
                   </h3>
-                  <p className="text-sm text-surface-variant mb-6 font-medium">Your pet misses you.</p>
+                  <p className="text-sm text-surface-variant mb-6 font-medium">{t('auth.petMissesYou')}</p>
                   
                   <button
                     onClick={signOut}
@@ -115,7 +117,7 @@ export default function AuthModal({ isOpen, onClose }) {
                     className="w-full flex items-center justify-center gap-2 bg-sage-dark hover:bg-forest transition-colors rounded-2xl py-3 text-white font-bold shadow-md"
                   >
                     <span className="material-symbols-outlined text-sm">logout</span>
-                    Logout
+                    {t('nav.logout')}
                   </button>
                 </motion.div>
               )}

@@ -6,12 +6,8 @@ import { useWishlistStore } from '../stores/useWishlistStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
+import { useTranslation } from 'react-i18next';
 
-const sortOptions = [
-  { label: 'Recommended', value: 'default' },
-  { label: 'Price: Low to High', value: 'price-asc' },
-  { label: 'Price: High to Low', value: 'price-desc' },
-];
 
 const dummyData = [
     {
@@ -109,6 +105,7 @@ const dummyData = [
 const ITEMS_PER_PAGE = 50;
 
 export default function Products({ onAddToCart }) {
+  const { t } = useTranslation();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const showLoader = useMinimumLoading(loading, 1500);
@@ -120,6 +117,12 @@ export default function Products({ onAddToCart }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isSortOpen, setIsSortOpen] = useState(false);
+
+  const sortOptions = useMemo(() => [
+    { label: t('products.sortRecommended'), value: 'default' },
+    { label: t('products.sortPriceLow'), value: 'price-asc' },
+    { label: t('products.sortPriceHigh'), value: 'price-desc' },
+  ], [t]);
 
   // Wishlist
   const { user } = useAuthStore();
@@ -258,24 +261,24 @@ export default function Products({ onAddToCart }) {
         <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-12">
           <div className="flex items-center gap-2 mb-2">
             <span className="material-symbols-outlined text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>storefront</span>
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-sage-dark">All Products</span>
+            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-sage-dark">{t('products.allProducts')}</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-forest tracking-tight mb-4">Pet Shop</h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-forest tracking-tight mb-4">{t('products.petShop')}</h1>
           <p className="text-lg sm:text-xl text-surface-variant max-w-2xl leading-relaxed">
-            Everything your pet needs, from gourmet meals to stylish couture.
+            {t('products.shopDescription')}
           </p>
         </motion.div>
 
         {error && (
           <div className="mb-8 p-6 glass-panel-strong border-earth-rose/30 bg-earth-rose/5 rounded-2xl text-center">
             <span className="material-symbols-outlined text-earth-rose text-4xl mb-2">error</span>
-            <h3 className="text-xl font-bold text-earth-rose mb-1">Could not load products</h3>
+            <h3 className="text-xl font-bold text-earth-rose mb-1">{t('products.couldNotLoad')}</h3>
             <p className="text-surface-variant mb-4">{error}</p>
             <button 
               onClick={() => window.location.reload()}
               className="px-6 py-2 bg-sage-dark text-white rounded-full font-bold hover:bg-forest transition-colors shadow-lg shadow-sage/20 font-inter"
             >
-              Retry Connection
+              {t('products.retryConnection')}
             </button>
           </div>
         )}
@@ -295,7 +298,7 @@ export default function Products({ onAddToCart }) {
             </div>
             <input 
               type="text" 
-              placeholder="Search premium products..." 
+              placeholder={t('products.searchPlaceholder')} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-14 pr-6 py-4 rounded-2xl glass-panel-strong border border-white/40 focus:outline-none focus:ring-4 focus:ring-sage/20 focus:border-sage-dark transition-all placeholder:text-surface-variant/60 text-forest font-medium h-[60px]"
@@ -403,7 +406,7 @@ export default function Products({ onAddToCart }) {
         </motion.div>
 
         {showLoader ? (
-          <PageLoader label="Loading products" />
+          <PageLoader label={t('products.loadingProducts')} />
         ) : (
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <AnimatePresence mode="popLayout">
@@ -467,7 +470,7 @@ export default function Products({ onAddToCart }) {
                     <div className="mb-4 flex items-center gap-1.5">
                       <span className={`w-2 h-2 rounded-full ${product.stock > 10 ? 'bg-sage' : 'bg-earth-rose animate-pulse'}`} />
                       <span className="text-[10px] sm:text-xs font-medium text-surface-variant">
-                        {product.stock > 0 ? `${product.stock} items left` : 'Out of stock'}
+                        {product.stock > 0 ? t('common.itemsLeft', { count: product.stock }) : t('common.outOfStock')}
                       </span>
                     </div>
                   )}
@@ -481,7 +484,7 @@ export default function Products({ onAddToCart }) {
                       className="px-4 py-2 bg-sage-dark text-white rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg hover:shadow-sage/30 transition-shadow"
                     >
                       <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
-                      Add
+                      {t('common.add')}
                     </motion.button>
                   </div>
                 </div>
@@ -494,7 +497,7 @@ export default function Products({ onAddToCart }) {
         {!showLoader && allProducts.length === 0 && (
           <div className="py-20 text-center text-surface-variant">
             <span className="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
-            <p className="text-xl">No products found.</p>
+            <p className="text-xl">{t('products.noProductsFound')}</p>
           </div>
         )}
 
@@ -546,7 +549,7 @@ export default function Products({ onAddToCart }) {
                     />
                     {selectedItem.stock !== undefined && (
                      <div className="absolute top-4 left-4 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-xs font-bold text-white shadow-xl">
-                        {selectedItem.stock} in stock
+                        {selectedItem.stock} {t('common.inStock', { count: selectedItem.stock }).replace(`${selectedItem.stock} `, '')}
                      </div>
                     )}
                     <motion.button
@@ -591,7 +594,7 @@ export default function Products({ onAddToCart }) {
                     {selectedItem.sizes && (
                       <div className="space-y-4 mb-8">
                         <div>
-                          <h4 className="text-xs font-bold text-charcoal mb-2 uppercase tracking-wide">Size</h4>
+                          <h4 className="text-xs font-bold text-charcoal mb-2 uppercase tracking-wide">{t('products.size')}</h4>
                           <div className="flex flex-wrap gap-2">
                             {selectedItem.sizes.map((size, si) => (
                               <button key={size} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl text-xs sm:text-sm font-semibold transition-all ${si === 1 ? 'bg-sage-dark text-white shadow-lg' : 'glass-panel text-charcoal hover:border-sage-dark'}`}>{size}</button>
@@ -599,7 +602,7 @@ export default function Products({ onAddToCart }) {
                           </div>
                         </div>
                         <div>
-                          <h4 className="text-xs font-bold text-charcoal mb-2 uppercase tracking-wide">Color</h4>
+                          <h4 className="text-xs font-bold text-charcoal mb-2 uppercase tracking-wide">{t('products.color')}</h4>
                           <div className="flex flex-wrap gap-2">
                             {selectedItem.colors.map(color => (
                               <span key={color} className="px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-xs font-medium glass-panel rounded-full text-surface-variant">{color}</span>
@@ -619,7 +622,7 @@ export default function Products({ onAddToCart }) {
                         }}
                         className="flex-1 py-3 sm:py-4 btn-primary text-sm sm:text-base flex items-center justify-center gap-2 rounded-2xl">
                         <span className="material-symbols-outlined text-xl">shopping_bag</span>
-                        Add to Bag
+                        {t('products.addToBag')}
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.1 }}

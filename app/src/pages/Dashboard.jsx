@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { foodProducts } from '../data/products';
+import { useTranslation } from 'react-i18next';
 
 const fadeInUp = {
   hidden: { y: 40, opacity: 0 },
@@ -18,6 +19,7 @@ const staggerContainer = {
 };
 
 export default function Dashboard({ onAddToCart }) {
+  const { t } = useTranslation();
   // Grab a few top products to feature
   const topProducts = foodProducts.slice(0, 3);
   
@@ -50,30 +52,30 @@ export default function Dashboard({ onAddToCart }) {
 
           <motion.div variants={fadeInUp} className="inline-flex items-center gap-3">
             <img src="/logo-transparent.png" alt="PETCare" className="h-8 w-auto object-contain" />
-            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-sage-dark">Tokyo's Premier Pet Sanctuary</span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-sage-dark">{t('dashboard.tagline')}</span>
           </motion.div>
             
             <motion.h1 variants={fadeInUp} className="text-5xl sm:text-6xl lg:text-7xl font-black text-forest leading-[1.1] tracking-tight">
-              A World of <br/>
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-sage-dark to-earth-rose">Luxury Care</span> <br/>
-              For Your Pet
+              {t('dashboard.heroTitle1')} <br/>
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-sage-dark to-earth-rose">{t('dashboard.heroTitle2')}</span> <br/>
+              {t('dashboard.heroTitle3')}
             </motion.h1>
             
             <motion.p variants={fadeInUp} className="text-base sm:text-xl text-surface-variant leading-relaxed max-w-lg font-medium">
-              From organic grooming to 5-star hotel suites and premium nutrition. Every detail is crafted for your companion's joy and wellbeing.
+              {t('dashboard.heroDescription')}
             </motion.p>
             
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-4">
               <Link to="/hotel">
                 <button className="px-6 sm:px-8 py-3 sm:py-4 bg-sage-dark text-white rounded-full font-bold shadow-lg shadow-sage-dark/30 hover:scale-105 active:scale-95 transition-transform flex items-center gap-2">
                   <span className="material-symbols-outlined">king_bed</span>
-                  Book Hotel
+                  {t('dashboard.bookHotel')}
                 </button>
               </Link>
               <Link to="/spa">
                 <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white/40 backdrop-blur-md text-sage-dark rounded-full font-bold border border-white/50 hover:bg-white/60 active:scale-95 transition-all flex items-center gap-2">
                   <span className="material-symbols-outlined">spa</span>
-                  Book Spa
+                  {t('dashboard.bookSpa')}
                 </button>
               </Link>
             </motion.div>
@@ -96,8 +98,8 @@ export default function Dashboard({ onAddToCart }) {
                      <span className="material-symbols-outlined text-sm sm:text-base">favorite</span>
                    </div>
                    <div>
-                     <p className="font-bold text-xs sm:text-sm">Trusted by</p>
-                     <p className="text-[10px] sm:text-xs opacity-90 font-medium">10,000+ Pet Parents</p>
+                     <p className="font-bold text-xs sm:text-sm">{t('dashboard.trustedBy')}</p>
+                     <p className="text-[10px] sm:text-xs opacity-90 font-medium">{t('dashboard.petParents')}</p>
                    </div>
                  </div>
 
@@ -115,9 +117,9 @@ export default function Dashboard({ onAddToCart }) {
           className="mb-32"
         >
           <div className="text-center mb-12 sm:mb-16">
-            <motion.span variants={fadeInUp} className="text-sage-dark font-bold tracking-widest uppercase text-xs sm:text-sm mb-2 block">Our Offerings</motion.span>
-            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-5xl font-black text-forest mb-4">The Ultimate Sanctuary</motion.h2>
-            <motion.p variants={fadeInUp} className="text-surface-variant text-base sm:text-lg max-w-2xl mx-auto">Comprehensive, 5-star experiences designed for every stage of your companion's life.</motion.p>
+            <motion.span variants={fadeInUp} className="text-sage-dark font-bold tracking-widest uppercase text-xs sm:text-sm mb-2 block">{t('dashboard.ourOfferings')}</motion.span>
+            <motion.h2 variants={fadeInUp} className="text-3xl sm:text-5xl font-black text-forest mb-4">{t('dashboard.ultimateSanctuary')}</motion.h2>
+            <motion.p variants={fadeInUp} className="text-surface-variant text-base sm:text-lg max-w-2xl mx-auto">{t('dashboard.offeringsDescription')}</motion.p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -130,10 +132,10 @@ export default function Dashboard({ onAddToCart }) {
               </div>
               <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <span className="material-symbols-outlined text-sage-light text-3xl sm:text-4xl mb-3 sm:mb-4">storefront</span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Boutique</h3>
-                <p className="text-white/80 text-xs sm:text-sm mb-6">Curated organic food, treats, and premium life accessories.</p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('dashboard.boutique')}</h3>
+                <p className="text-white/80 text-xs sm:text-sm mb-6">{t('dashboard.boutiqueDescription')}</p>
                 <Link to="/products" className="inline-flex items-center gap-2 text-sage-light font-bold hover:gap-4 transition-all w-fit text-sm">
-                  Shop Now <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  {t('dashboard.shopNow')} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
             </motion.div>
@@ -147,10 +149,10 @@ export default function Dashboard({ onAddToCart }) {
               </div>
               <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <span className="material-symbols-outlined text-sage-light text-3xl sm:text-4xl mb-3 sm:mb-4">spa</span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Spa & Grooming</h3>
-                <p className="text-white/80 text-xs sm:text-sm mb-6">Relaxing baths, breed-specific styling, and wellness treatments.</p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('dashboard.spaGrooming')}</h3>
+                <p className="text-white/80 text-xs sm:text-sm mb-6">{t('dashboard.spaDescription')}</p>
                 <Link to="/spa" className="inline-flex items-center gap-2 text-sage-light font-bold hover:gap-4 transition-all w-fit text-sm">
-                  Book Session <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  {t('dashboard.bookSession')} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
             </motion.div>
@@ -164,10 +166,10 @@ export default function Dashboard({ onAddToCart }) {
               </div>
               <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full justify-end">
                 <span className="material-symbols-outlined text-sage-light text-3xl sm:text-4xl mb-3 sm:mb-4">king_bed</span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Luxury Hotel</h3>
-                <p className="text-white/80 text-xs sm:text-sm mb-6">Climate-controlled suites, 24/7 care, and gourmet room service.</p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">{t('dashboard.luxuryHotel')}</h3>
+                <p className="text-white/80 text-xs sm:text-sm mb-6">{t('dashboard.hotelDescription')}</p>
                 <Link to="/hotel" className="inline-flex items-center gap-2 text-sage-light font-bold hover:gap-4 transition-all w-fit text-sm">
-                  Reserve Suite <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  {t('dashboard.reserveSuite')} <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
             </motion.div>
@@ -183,10 +185,10 @@ export default function Dashboard({ onAddToCart }) {
           className="relative rounded-[2rem] sm:rounded-[3rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] flex flex-col md:flex-row bg-charcoal"
         >
           <div className="md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative z-10 md:order-1 order-2">
-            <span className="inline-block w-fit px-3 py-1 bg-white/10 text-sage-light uppercase tracking-widest font-bold text-[10px] sm:text-xs rounded-full mb-4 sm:mb-6">Flagship Location</span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 sm:mb-6 leading-tight">Visit Our Omotesando Sanctuary</h2>
+            <span className="inline-block w-fit px-3 py-1 bg-white/10 text-sage-light uppercase tracking-widest font-bold text-[10px] sm:text-xs rounded-full mb-4 sm:mb-6">{t('dashboard.flagshipLocation')}</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 sm:mb-6 leading-tight">{t('dashboard.visitOmotesando')}</h2>
             <p className="text-white/70 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed">
-              Nestled in the heart of Tokyo's most stylish district, our flagship sanctuary offers a serene escape for pets and parents alike. Experience our services in person and consult with our world-class experts.
+              {t('dashboard.locationDescription')}
             </p>
             
             <div className="space-y-4 mb-8">
@@ -204,7 +206,7 @@ export default function Dashboard({ onAddToCart }) {
                   <span className="material-symbols-outlined text-sage-light text-[20px]">schedule</span>
                 </div>
                 <div>
-                  <p className="font-bold text-sm sm:text-base">Open Daily</p>
+                  <p className="font-bold text-sm sm:text-base">{t('dashboard.openDaily')}</p>
                   <p className="text-white/60 text-xs sm:text-sm">10:00 AM - 8:00 PM</p>
                 </div>
               </div>
@@ -215,7 +217,7 @@ export default function Dashboard({ onAddToCart }) {
               className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-charcoal rounded-full font-bold hover:bg-sage-light hover:text-forest transition-colors w-full sm:w-fit flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined text-sm">map</span>
-              Get Directions
+              {t('dashboard.getDirections')}
             </button>
           </div>
           <div className="md:w-1/2 relative min-h-[300px] sm:min-h-[400px] md:order-2 order-1">

@@ -5,6 +5,7 @@ import { defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -170,9 +171,9 @@ export default function HotelBooking({ onBook }) {
             <div className="glass-panel-strong p-6 sm:p-12 rounded-2xl max-w-[90%] sm:max-w-none">
               <div className="inline-flex items-center space-x-2 mb-3 sm:mb-4">
                 <span className="material-symbols-outlined text-sage-dark text-sm sm:text-base" style={{ fontVariationSettings: "'FILL' 1" }}>king_bed</span>
-                <span className="text-[10px] sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
+                <span className="text-[10px] sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">{t('hotel.tagline')}</span>
               </div>
-              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-forest tracking-tight mb-4 sm:mb-6 leading-tight sm:leading-[1.1]">The Pet Sanctuary Hotel</h1>
+              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-forest tracking-tight mb-4 sm:mb-6 leading-tight sm:leading-[1.1]">{t('hotel.heroTitle')}</h1>
               <p className="text-xs sm:text-lg text-surface-variant leading-relaxed font-medium">
                 A home away from home for your beloved companions, where luxury meets unparalleled care.
               </p>
@@ -188,7 +189,7 @@ export default function HotelBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">1</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Select Your Pet</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('hotel.selectPet')}</h2>
               </div>
               <div className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-8">
                 {defaultPets.map(pet => {
@@ -220,13 +221,13 @@ export default function HotelBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">2</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Range Stay Duration</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('hotel.stayDuration')}</h2>
               </div>
               <div className="glass-panel p-5 sm:p-8 rounded-2xl antigravity-shadow">
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold">{monthNames[currentMonth]} {currentYear}</h3>
-                    <p className="text-xs text-surface-variant font-medium">Select check-in & check-out</p>
+                    <p className="text-xs text-surface-variant font-medium">{t('hotel.selectCheckInOut')}</p>
                   </div>
                   <div className="flex space-x-2">
                     <button onClick={() => setCurrentMonth(m => Math.max(0, m - 1))} className="p-2 hover:bg-white/30 rounded-full transition-colors">
@@ -277,7 +278,7 @@ export default function HotelBooking({ onBook }) {
                       <span className="material-symbols-outlined text-xl">login</span>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-surface-variant leading-tight">Check-In</p>
+                      <p className="text-[10px] uppercase font-bold text-surface-variant leading-tight">{t('hotel.checkIn')}</p>
                       <p className="font-black text-forest">{checkIn ? `${monthNames[currentMonth].slice(0,3)} ${checkIn}` : '--'}</p>
                     </div>
                   </div>
@@ -286,14 +287,14 @@ export default function HotelBooking({ onBook }) {
                       <span className="material-symbols-outlined text-xl">logout</span>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-surface-variant leading-tight">Check-Out</p>
+                      <p className="text-[10px] uppercase font-bold text-surface-variant leading-tight">{t('hotel.checkOut')}</p>
                       <p className="font-black text-forest">{checkOut ? `${monthNames[currentMonth].slice(0,3)} ${checkOut}` : '--'}</p>
                     </div>
                   </div>
                   <div className="sm:w-32 bg-sage-dark p-4 rounded-2xl flex flex-col items-center justify-center text-white">
                     <p className="text-[10px] uppercase font-bold opacity-70 leading-tight">Total</p>
                     <p className="text-2xl font-black">{duration || '--'}</p>
-                    <p className="text-[8px] uppercase font-black">Nights</p>
+                    <p className="text-[8px] uppercase font-black">{t('common.nights')}</p>
                   </div>
                 </div>
               </div>
@@ -303,7 +304,7 @@ export default function HotelBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">3</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Choose Your Suite</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('hotel.chooseSuite')}</h2>
               </div>
               <div className="flex flex-col gap-6 sm:gap-8">
                 {hotelSuites.map((suite, i) => {
@@ -385,7 +386,7 @@ export default function HotelBooking({ onBook }) {
                viewport={{ once: true }}
                className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow sticky top-24"
             >
-              <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">Booking Summary</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">{t('hotel.bookingSummary')}</h3>
               
               <div className="bg-white/40 p-5 sm:p-6 rounded-xl mb-8 sm:mb-10 space-y-2 border border-white/40 shadow-inner">
                 <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/40">
@@ -393,7 +394,7 @@ export default function HotelBooking({ onBook }) {
                     <img src={selectedPet?.image || '/placeholder-pet.png'} alt={selectedPet?.name || 'Pet'} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="block text-[10px] uppercase tracking-widest text-surface-variant font-bold">Reserving for</span>
+                    <span className="block text-[10px] uppercase tracking-widest text-surface-variant font-bold">{t('hotel.reservingFor')}</span>
                     <span className="font-black text-sm sm:text-base">{selectedPet?.name || '...'}</span>
                   </div>
                 </div>
@@ -404,12 +405,12 @@ export default function HotelBooking({ onBook }) {
                     <span className="font-medium">${suiteDetails.price.toFixed(2)}/night</span>
                   </div>
                   <div className="flex justify-between items-center text-surface-variant border-b border-white/40 pb-3">
-                    <span>Duration</span>
+                    <span>{t('hotel.duration')}</span>
                     <span className="font-bold text-charcoal">{duration} nights</span>
                   </div>
 
                   <div className="flex justify-between items-center pt-1">
-                    <span className="text-surface-variant">Subtotal</span>
+                    <span className="text-surface-variant">{t('common.subtotal')}</span>
                     <span className="font-bold text-charcoal">${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -420,7 +421,7 @@ export default function HotelBooking({ onBook }) {
               </div>
 
               <div className="flex items-center justify-between pt-6 border-t-2 border-forest/10 mb-8 sm:mb-10">
-                <span className="text-lg sm:text-xl text-forest font-bold">Total Stay Cost</span>
+                <span className="text-lg sm:text-xl text-forest font-bold">{t('hotel.totalStayCost')}</span>
                 <span className="text-2xl sm:text-4xl text-sage-dark font-black tracking-tighter">${total.toFixed(2)}</span>
               </div>
 
@@ -456,7 +457,7 @@ export default function HotelBooking({ onBook }) {
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110 group-hover:-rotate-12 group-hover:-translate-y-0.5 group-hover:text-sage-light" style={{ fontVariationSettings: "'FILL' 1" }}>hotel_class</span>
-                      <span className="transition-all duration-300 group-hover:tracking-wide">Confirm Booking</span>
+                      <span className="transition-all duration-300 group-hover:tracking-wide">{t('hotel.confirmBooking')}</span>
                       <span className="material-symbols-outlined text-xl transition-all duration-300 group-hover:translate-x-1.5 group-hover:scale-110 group-hover:text-sage-light">arrow_forward</span>
                     </>
                   )}

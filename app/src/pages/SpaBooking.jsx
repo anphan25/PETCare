@@ -5,6 +5,7 @@ import { spaServices, timeSlots, groomer, defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -26,6 +27,7 @@ export default function SpaBooking({ onBook }) {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useAuthStore();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const resetForm = () => {
@@ -138,9 +140,9 @@ export default function SpaBooking({ onBook }) {
             <div className="glass-panel-strong p-6 sm:p-12 rounded-2xl max-w-[90%] sm:max-w-none">
               <div className="inline-flex items-center space-x-2 mb-3 sm:mb-4">
                 <span className="material-symbols-outlined text-sage-dark text-sm sm:text-base" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-                <span className="text-[10px] sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">The Ethereal Sanctuary</span>
+                <span className="text-[10px] sm:text-sm tracking-[0.2em] uppercase font-semibold text-sage-dark">{t('spa.tagline')}</span>
               </div>
-              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-forest tracking-tight mb-4 sm:mb-6 leading-tight sm:leading-[1.1]">Luxury Spa & Grooming</h1>
+              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-forest tracking-tight mb-4 sm:mb-6 leading-tight sm:leading-[1.1]">{t('spa.heroTitle')}</h1>
               <p className="text-xs sm:text-lg text-surface-variant leading-relaxed font-medium">
                 Give your pet the royal treatment they deserve. From organic chamomile baths to precision styling.
               </p>
@@ -155,7 +157,7 @@ export default function SpaBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">1</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Select Your Pet</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('spa.selectPet')}</h2>
               </div>
               <div className="glass-panel p-6 sm:p-8 rounded-2xl antigravity-shadow flex flex-wrap gap-4 sm:gap-6">
                 {defaultPets.map(pet => {
@@ -187,7 +189,7 @@ export default function SpaBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">2</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Choose Services</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('spa.chooseServices')}</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {spaServices.map((service, i) => {
@@ -243,7 +245,7 @@ export default function SpaBooking({ onBook }) {
             <motion.section initial={{ y: 40, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }}>
               <div className="flex items-center space-x-4 mb-6 sm:mb-8">
                 <span className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-sage-dark text-white flex items-center justify-center font-bold shadow-lg shadow-sage-dark/20 text-sm sm:text-base">3</span>
-                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">Pick Date & Time</h2>
+                <h2 className="text-xl sm:text-2xl font-semibold text-charcoal">{t('spa.pickDateTime')}</h2>
               </div>
               <div className="glass-panel p-5 sm:p-8 rounded-2xl antigravity-shadow">
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
@@ -293,7 +295,7 @@ export default function SpaBooking({ onBook }) {
 
                 {/* Time Slots */}
                 <div className="space-y-4">
-                  <span className="text-[10px] sm:text-sm font-bold text-surface-variant uppercase tracking-widest">Available Time Slots</span>
+                  <span className="text-[10px] sm:text-sm font-bold text-surface-variant uppercase tracking-widest">{t('spa.availableTimeSlots')}</span>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
                     {timeSlots.map(slot => {
                       const isDisabled = slot === '02:30 PM';
@@ -329,7 +331,7 @@ export default function SpaBooking({ onBook }) {
               viewport={{ once: true }}
               className="glass-panel p-6 sm:p-10 rounded-2xl antigravity-shadow sticky top-24"
             >
-              <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">Booking Summary</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-charcoal mb-6 sm:mb-8">{t('spa.bookingSummary')}</h3>
               
               <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
                 <div className="flex justify-between items-center pb-4 border-b border-white/30">
@@ -351,7 +353,7 @@ export default function SpaBooking({ onBook }) {
                         <p className="text-[10px] sm:text-sm text-sage-dark font-medium">${s.price.toFixed(2)}</p>
                       </div>
                     )) : (
-                      <p className="text-xs sm:text-sm text-outline italic">No services selected</p>
+                      <p className="text-xs sm:text-sm text-outline italic">{t('spa.noServicesSelected')}</p>
                     )}
                   </div>
                 </div>
@@ -359,7 +361,7 @@ export default function SpaBooking({ onBook }) {
                 <div className="flex justify-between items-center pb-4 border-b border-white/30">
                   <div className="flex items-center space-x-3">
                     <span className="material-symbols-outlined text-sage-dark text-xl sm:text-2xl">calendar_month</span>
-                    <span className="text-xs sm:text-sm text-surface-variant">Appointment</span>
+                    <span className="text-xs sm:text-sm text-surface-variant">{t('spa.appointment')}</span>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-sm sm:text-base">{monthNames[currentMonth]} {selectedDate}, {currentYear}</p>
@@ -370,15 +372,15 @@ export default function SpaBooking({ onBook }) {
 
               <div className="bg-white/40 p-5 sm:p-6 rounded-xl mb-8 sm:mb-10 space-y-2 border border-white/40 shadow-inner">
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-surface-variant">Subtotal</span>
+                  <span className="text-surface-variant">{t('common.subtotal')}</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs sm:text-sm">
-                  <span className="text-surface-variant">Tax (5%)</span>
+                  <span className="text-surface-variant">{t('spa.taxRate')}</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center pt-3 sm:pt-4 mt-2 border-t border-white/40">
-                  <span className="text-base sm:text-lg font-bold">Total</span>
+                  <span className="text-base sm:text-lg font-bold">{t('common.total')}</span>
                   <span className="text-xl sm:text-2xl font-black text-sage-dark">${total.toFixed(2)}</span>
                 </div>
               </div>
@@ -408,7 +410,7 @@ export default function SpaBooking({ onBook }) {
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-xl sm:text-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:-translate-y-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>spa</span>
-                      <span className="transition-all duration-300 group-hover:tracking-wide">Confirm Booking</span>
+                      <span className="transition-all duration-300 group-hover:tracking-wide">{t('spa.confirmBooking')}</span>
                       <span className="material-symbols-outlined text-xl transition-all duration-300 group-hover:translate-x-1.5 group-hover:scale-110">arrow_forward</span>
                     </>
                   )}
@@ -418,7 +420,7 @@ export default function SpaBooking({ onBook }) {
 
               {/* Groomer Card Integrated */}
               <div className="mt-12 pt-8 border-t border-white/40">
-                <p className="text-xs font-bold text-surface-variant uppercase tracking-widest mb-4">Assigned Groomer</p>
+                <p className="text-xs font-bold text-surface-variant uppercase tracking-widest mb-4">{t('spa.assignedGroomer')}</p>
                 <div className="flex items-center space-x-4">
                   <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-white/50">
                     <img alt={groomer.name} className="w-full h-full object-cover" src={groomer.image} />

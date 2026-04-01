@@ -6,10 +6,12 @@ import { useWishlistStore } from '../stores/useWishlistStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 
 export default function Wishlist({ onAddToCart }) {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const { wishlistIds, fetchWishlist, toggleWishlist } = useWishlistStore();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,8 +88,8 @@ export default function Wishlist({ onAddToCart }) {
       <div className="mesh-gradient min-h-screen flex items-center justify-center">
         <div className="text-center">
           <span className="material-symbols-outlined text-6xl text-earth-rose mb-4 block opacity-60">favorite</span>
-          <h2 className="text-2xl font-bold text-forest mb-2">Sign in to view your wishlist</h2>
-          <p className="text-surface-variant">Save your favourite products and come back to them later.</p>
+          <h2 className="text-2xl font-bold text-forest mb-2">{t('auth.signInToView')}</h2>
+          <p className="text-surface-variant">{t('auth.saveFavourites')}</p>
         </div>
       </div>
     );
@@ -101,20 +103,20 @@ export default function Wishlist({ onAddToCart }) {
         <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="mb-12">
           <div className="flex items-center gap-2 mb-2">
             <span className="material-symbols-outlined text-earth-rose" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-earth-rose">My Wishlist</span>
+            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-earth-rose">{t('wishlist.title')}</span>
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-forest tracking-tight mb-4">
-            Favourites
+            {t('wishlist.pageTitle')}
           </h1>
           <p className="text-lg text-surface-variant max-w-2xl leading-relaxed">
             {wishlistIds.size === 0
-              ? 'Your wishlist is empty. Start exploring and save what you love!'
-              : `You have ${wishlistIds.size} item${wishlistIds.size > 1 ? 's' : ''} saved.`}
+              ? t('wishlist.emptyWishlist')
+              : t('wishlist.itemsSaved', { count: wishlistIds.size })}
           </p>
         </motion.div>
 
         {loading ? (
-          <PageLoader label="Loading your wishlist" />
+          <PageLoader label={t('wishlist.loadingWishlist')} />
         ) : products.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -125,14 +127,14 @@ export default function Wishlist({ onAddToCart }) {
               <span className="material-symbols-outlined text-6xl text-earth-rose/50">heart_broken</span>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-forest mb-2">No favourites yet</h3>
-              <p className="text-surface-variant mb-6">Browse our products and tap the ♡ to save them here.</p>
+              <h3 className="text-2xl font-bold text-forest mb-2">{t('wishlist.emptyTitle')}</h3>
+              <p className="text-surface-variant mb-6">{t('wishlist.emptyDescription')}</p>
               <Link
                 to="/products"
                 className="inline-flex items-center gap-2 px-8 py-3 bg-sage-dark text-white rounded-2xl font-bold hover:bg-forest transition-colors shadow-lg shadow-sage/20"
               >
                 <span className="material-symbols-outlined text-[20px]">storefront</span>
-                Browse Products
+                {t('wishlist.browseProducts')}
               </Link>
             </div>
           </motion.div>

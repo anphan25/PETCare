@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 // Configuration for floating particles with varying orbits and colors
 const particles = [
@@ -11,6 +12,8 @@ const particles = [
 ];
 
 export default function LoadingScreen() {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -108,10 +111,10 @@ export default function LoadingScreen() {
         className="mt-16 text-center z-10"
       >
         <h2 className="text-3xl sm:text-4xl font-black text-forest tracking-tight mb-3">
-          Preparing...
+          {t('loader.preparing')}
         </h2>
         <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-surface-variant/70">
-          Curating the ultimate luxury
+          {t('loader.curatingLuxury')}
         </p>
       </motion.div>
     </motion.div>

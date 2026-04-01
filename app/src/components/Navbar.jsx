@@ -3,8 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user, profile } = useAuthStore();
@@ -48,10 +51,10 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
   };
 
   const navItems = [
-    { to: '/', label: 'Home' },
-    { to: '/products', label: 'Products' },
-    { to: '/hotel', label: 'Hotel' },
-    { to: '/spa', label: 'Spa' },
+    { to: '/', label: t('nav.home') },
+    { to: '/products', label: t('nav.products') },
+    { to: '/hotel', label: t('nav.hotel') },
+    { to: '/spa', label: t('nav.spa') },
   ];
 
   return (
@@ -97,6 +100,9 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
 
         {/* Actions */}
         <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+          <div className="hidden sm:block">
+            <LanguageSwitcher />
+          </div>
           <motion.button
             id="cart-icon-container"
             animate={{ scale: isBumped ? [1, 1.4, 1] : 1 }}
@@ -144,7 +150,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
               ) : (
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[20px]">login</span>
-                  <span className="tracking-tight">Login</span>
+                  <span className="tracking-tight">{t('nav.login')}</span>
                 </div>
               )}
             </button>
@@ -171,7 +177,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                       className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors"
                     >
                       <span className="material-symbols-outlined text-[18px] text-sage">person</span>
-                      My Profile
+                      {t('nav.myProfile')}
                     </NavLink>
                     <NavLink 
                       to="/wishlist"
@@ -179,7 +185,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                       className="w-full text-left px-4 py-2.5 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors"
                     >
                       <span className="material-symbols-outlined text-[18px] text-earth-rose" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                      My Wishlist
+                      {t('nav.myWishlist')}
                     </NavLink>
                     <button 
                       onClick={() => setUserMenuOpen(false)}
@@ -187,7 +193,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                     >
                       <NavLink to="/orders" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
                         <span className="material-symbols-outlined text-[18px] text-sage">history</span>
-                        Order History
+                        {t('nav.orderHistory')}
                       </NavLink>
                     </button>
                     <button 
@@ -196,7 +202,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                     >
                       <NavLink to="/spa-bookings" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
                         <span className="material-symbols-outlined text-[18px] text-sage">spa</span>
-                        My Spa Bookings
+                        {t('nav.mySpaBookings')}
                       </NavLink>
                     </button>
                     <button 
@@ -205,7 +211,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                     >
                       <NavLink to="/hotel-bookings" className="px-4 py-2 text-sm text-forest font-medium hover:bg-white/40 flex items-center gap-3 transition-colors">
                         <span className="material-symbols-outlined text-[18px] text-sage">hotel</span>
-                        My Hotel Bookings
+                        {t('nav.myHotelBookings')}
                       </NavLink>
                     </button>
                   </div>
@@ -216,7 +222,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                       className="w-full text-left px-4 py-2 text-sm text-earth-rose font-bold hover:bg-earth-rose/10 flex items-center gap-3 transition-colors"
                     >
                       <span className="material-symbols-outlined text-[18px]">logout</span>
-                      Logout
+                      {t('nav.logout')}
                     </button>
                   </div>
                 </motion.div>
@@ -271,7 +277,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                   }`
                 }
               >
-                Order History
+                {t('nav.orderHistory')}
               </NavLink>
               <NavLink
                 to="/spa-bookings"
@@ -283,7 +289,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                   }`
                 }
               >
-                My Spa Bookings
+                {t('nav.mySpaBookings')}
               </NavLink>
               <NavLink
                 to="/hotel-bookings"
@@ -295,7 +301,7 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
                   }`
                 }
               >
-                My Hotel Bookings
+                {t('nav.myHotelBookings')}
               </NavLink>
             </div>
           </motion.div>

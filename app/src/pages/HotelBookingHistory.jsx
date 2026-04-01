@@ -6,10 +6,12 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
+import { useTranslation } from 'react-i18next';
 
 
 export default function HotelBookingHistory() {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [userBookings, setUserBookings] = useState([]);
   const showLoader = useMinimumLoading(isLoading, 1500);
@@ -89,16 +91,16 @@ export default function HotelBookingHistory() {
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </Link>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">Hotel Bookings</h1>
+            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">{t('hotelHistory.title')}</h1>
             <p className="text-lg text-surface-variant max-w-xl leading-relaxed">
-              Review your upcoming stays and past sanctuary hotel reservations.
+              {t('hotelHistory.description')}
             </p>
           </motion.div>
         </header>
 
         <div className="space-y-6">
           {showLoader ? (
-            <PageLoader label="Loading your reservations" />
+            <PageLoader label={t('hotelHistory.loadingReservations')} />
           ) : userBookings.length > 0 ? (
             userBookings.map((booking, index) => (
               <motion.div
@@ -133,7 +135,7 @@ export default function HotelBookingHistory() {
 
                 <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 relative z-10 border-t md:border-t-0 md:border-l border-white/40 pt-6 md:pt-0 md:pl-10 shrink-0">
                   <div className="text-right">
-                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">Total Amount</span>
+                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">{t('hotelHistory.totalAmount')}</span>
                     <span className="text-2xl font-black text-forest">${booking.total.toFixed(2)}</span>
                   </div>
                   <div className="flex flex-col items-end gap-2">
@@ -142,7 +144,7 @@ export default function HotelBookingHistory() {
                     </div>
                     <span className="text-[10px] font-bold text-sage-dark flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
                       <span className="material-symbols-outlined text-[13px]">info</span>
-                      View details
+                      {t('common.viewDetails')}
                     </span>
                   </div>
                 </div>
@@ -151,10 +153,10 @@ export default function HotelBookingHistory() {
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-panel p-16 rounded-3xl text-center border border-white/40">
               <span className="material-symbols-outlined text-6xl text-sage-dark/30 mb-6 block">hotel</span>
-              <h3 className="text-2xl font-bold text-forest mb-2">No Reservations Yet</h3>
-              <p className="text-surface-variant mb-8">Book a luxurious sanctuary suite for your beloved pet.</p>
+              <h3 className="text-2xl font-bold text-forest mb-2">{t('hotelHistory.noReservationsTitle')}</h3>
+              <p className="text-surface-variant mb-8">{t('hotelHistory.noReservationsDescription')}</p>
               <Link to="/hotel" className="btn-primary inline-flex items-center gap-2 px-8 py-4">
-                Book Suite
+                {t('hotelHistory.bookSuite')}
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </Link>
             </motion.div>
@@ -213,7 +215,7 @@ export default function HotelBookingHistory() {
               <div className="p-7">
                 {/* Title */}
                 <div className="mb-6">
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">Hotel Reservation</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">{t('hotelHistory.hotelReservation')}</p>
                   <h2 className="text-2xl font-black text-forest tracking-tight">{selectedBooking.package}</h2>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="material-symbols-outlined text-[16px] text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
@@ -241,9 +243,9 @@ export default function HotelBookingHistory() {
 
                 {/* Price breakdown */}
                 <div className="bg-forest/5 rounded-2xl p-5 border border-forest/8 mb-6 space-y-2.5">
-                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">Price Breakdown</h3>
+                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">{t('hotelHistory.priceBreakdown')}</h3>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Suite rate</span>
+                    <span className="text-surface-variant">{t('hotelHistory.suiteRate')}</span>
                     <span className="font-bold text-charcoal">${selectedBooking.pricePerNight.toFixed(2)} / night</span>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -251,15 +253,15 @@ export default function HotelBookingHistory() {
                     <span className="font-bold text-charcoal">{selectedBooking.duration} night{selectedBooking.duration !== 1 ? 's' : ''}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Subtotal</span>
+                    <span className="text-surface-variant">{t('common.subtotal')}</span>
                     <span className="font-bold text-charcoal">${selectedBooking.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Tax & Fees (5%)</span>
+                    <span className="text-surface-variant">{t('hotelHistory.taxFees')}</span>
                     <span className="font-bold text-charcoal">${selectedBooking.tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-forest/10">
-                    <span className="text-base font-black text-forest">Total Paid</span>
+                    <span className="text-base font-black text-forest">{t('hotelHistory.totalPaid')}</span>
                     <span className="text-2xl font-black text-sage-dark tracking-tight">${selectedBooking.total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -267,7 +269,7 @@ export default function HotelBookingHistory() {
                 {/* Footer badge */}
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/15 py-2.5 rounded-full">
                   <span className="material-symbols-outlined text-[15px]">verified_user</span>
-                  Safe Stay Certified • Vet on-call 24/7
+                  {t('hotelHistory.certifiedBadge')}
                 </div>
               </div>
             </motion.div>

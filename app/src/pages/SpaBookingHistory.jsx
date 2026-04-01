@@ -6,10 +6,12 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
+import { useTranslation } from 'react-i18next';
 
 
 export default function SpaBookingHistory() {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [userBookings, setUserBookings] = useState([]);
   const showLoader = useMinimumLoading(isLoading, 1500);
@@ -96,16 +98,16 @@ export default function SpaBookingHistory() {
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </Link>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">Spa Bookings</h1>
+            <h1 className="text-4xl sm:text-6xl font-black text-forest tracking-tighter mb-4">{t('spaHistory.title')}</h1>
             <p className="text-lg text-surface-variant max-w-xl leading-relaxed">
-              Review your upcoming and past sanctuary spa appointments for your beloved companions.
+              {t('spaHistory.description')}
             </p>
           </motion.div>
         </header>
 
         <div className="space-y-6">
           {showLoader ? (
-            <PageLoader label="Loading your appointments" />
+            <PageLoader label={t('spaHistory.loadingAppointments')} />
           ) : userBookings.length > 0 ? (
             userBookings.map((booking, index) => (
               <motion.div
@@ -146,7 +148,7 @@ export default function SpaBookingHistory() {
 
                 <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 relative z-10 border-t md:border-t-0 md:border-l border-white/40 pt-6 md:pt-0 md:pl-10 shrink-0">
                   <div className="text-right">
-                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">Total Amount</span>
+                    <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest block mb-0.5">{t('spaHistory.totalAmount')}</span>
                     <span className="text-2xl font-black text-forest">${booking.total.toFixed(2)}</span>
                   </div>
                   <div className="flex flex-col items-end gap-2">
@@ -155,7 +157,7 @@ export default function SpaBookingHistory() {
                     </div>
                     <span className="text-[10px] font-bold text-sage-dark flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
                       <span className="material-symbols-outlined text-[13px]">info</span>
-                      View details
+                      {t('common.viewDetails')}
                     </span>
                   </div>
                 </div>
@@ -164,10 +166,10 @@ export default function SpaBookingHistory() {
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-panel p-16 rounded-3xl text-center border border-white/40">
               <span className="material-symbols-outlined text-6xl text-sage-dark/30 mb-6 block">spa</span>
-              <h3 className="text-2xl font-bold text-forest mb-2">No Appointments Yet</h3>
-              <p className="text-surface-variant mb-8">Book a relaxing sanctuary experience for your beloved pet.</p>
+              <h3 className="text-2xl font-bold text-forest mb-2">{t('spaHistory.noAppointmentsTitle')}</h3>
+              <p className="text-surface-variant mb-8">{t('spaHistory.noAppointmentsDescription')}</p>
               <Link to="/spa" className="btn-primary inline-flex items-center gap-2 px-8 py-4">
-                Book Spa
+                {t('spaHistory.bookSpa')}
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </Link>
             </motion.div>
@@ -226,7 +228,7 @@ export default function SpaBookingHistory() {
               <div className="p-7">
                 {/* Title */}
                 <div className="mb-5">
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">Spa Appointment</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-sage-dark mb-1">{t('spaHistory.spaAppointment')}</p>
                   <div className="flex items-center gap-2 mb-3">
                     <span className="material-symbols-outlined text-[16px] text-sage-dark" style={{ fontVariationSettings: "'FILL' 1" }}>pets</span>
                     <span className="text-sm font-bold text-charcoal/70">Pet: <span className="text-sage-dark">{selectedBooking.petName}</span></span>
@@ -261,17 +263,17 @@ export default function SpaBookingHistory() {
 
                 {/* Price breakdown */}
                 <div className="bg-sage/5 rounded-2xl p-5 border border-sage/10 mb-6 space-y-2.5">
-                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">Price Breakdown</h3>
+                  <h3 className="text-xs font-black text-forest uppercase tracking-widest border-b border-forest/10 pb-2.5 mb-3">{t('spaHistory.priceBreakdown')}</h3>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Subtotal</span>
+                    <span className="text-surface-variant">{t('common.subtotal')}</span>
                     <span className="font-bold text-charcoal">${selectedBooking.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-surface-variant">Tax & Fees (5%)</span>
+                    <span className="text-surface-variant">{t('spaHistory.taxFees')}</span>
                     <span className="font-bold text-charcoal">${selectedBooking.tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-forest/10">
-                    <span className="text-base font-black text-forest">Total Paid</span>
+                    <span className="text-base font-black text-forest">{t('spaHistory.totalPaid')}</span>
                     <span className="text-2xl font-black text-sage-dark tracking-tight">${selectedBooking.total.toFixed(2)}</span>
                   </div>
                 </div>
@@ -279,7 +281,7 @@ export default function SpaBookingHistory() {
                 {/* Footer badge */}
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/15 py-2.5 rounded-full">
                   <span className="material-symbols-outlined text-[15px]">spa</span>
-                  Premium Care • Certified Groomer on-site
+                  {t('spaHistory.certifiedBadge')}
                 </div>
               </div>
             </motion.div>

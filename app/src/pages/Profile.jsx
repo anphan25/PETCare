@@ -2,9 +2,11 @@ import { motion } from 'framer-motion';
 import { useAuthStore } from '../stores/useAuthStore';
 import { defaultPets } from '../data/products';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Profile() {
   const { user, profile } = useAuthStore();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('profile');
 
   // If no user, user will be redirected or we show a simple message
@@ -13,8 +15,8 @@ export default function Profile() {
       <div className="mesh-gradient min-h-screen flex items-center justify-center p-6">
         <div className="glass-panel p-10 rounded-3xl text-center max-w-md">
            <span className="material-symbols-outlined text-sage-dark text-6xl mb-4">lock</span>
-           <h2 className="text-2xl font-black text-forest mb-2">Access Denied</h2>
-           <p className="text-surface-variant font-medium">Please login to view your ethereal profile.</p>
+           <h2 className="text-2xl font-black text-forest mb-2">{t('auth.accessDenied')}</h2>
+           <p className="text-surface-variant font-medium">{t('auth.pleaseLogin')}</p>
         </div>
       </div>
     );
@@ -62,15 +64,15 @@ export default function Profile() {
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="bg-white/30 p-4 rounded-2xl border border-white/40">
-                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">Total Points</p>
+                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">{t('profile.totalPoints')}</p>
                 <p className="text-2xl font-black text-sage-dark">{memberPoints.toLocaleString()}</p>
               </div>
               <div className="bg-white/30 p-4 rounded-2xl border border-white/40">
-                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">Pets Managed</p>
+                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">{t('profile.petsManaged')}</p>
                 <p className="text-2xl font-black text-sage-dark">{defaultPets.length}</p>
               </div>
               <div className="bg-white/30 p-4 rounded-2xl border border-white/40 hidden sm:block">
-                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">Member Since</p>
+                <p className="text-[10px] uppercase font-bold text-surface-variant mb-1">{t('profile.memberSince')}</p>
                 <p className="text-2xl font-black text-sage-dark">Mar 2026</p>
               </div>
             </div>
@@ -86,20 +88,20 @@ export default function Profile() {
               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all ${activeTab === 'profile' ? 'bg-sage-dark text-white shadow-xl shadow-sage-dark/20' : 'glass-panel text-forest/70 hover:bg-white/50'}`}
              >
                 <span className="material-symbols-outlined">account_circle</span>
-                Information
+                 {t('profile.information')}
              </button>
              <button 
               onClick={() => setActiveTab('pets')}
               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all ${activeTab === 'pets' ? 'bg-sage-dark text-white shadow-xl shadow-sage-dark/20' : 'glass-panel text-forest/70 hover:bg-white/50'}`}
              >
                 <span className="material-symbols-outlined">pets</span>
-                My Pets
+                 {t('profile.myPets')}
              </button>
              <button 
               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold glass-panel text-forest/70 hover:bg-white/50"
              >
                 <span className="material-symbols-outlined">settings</span>
-                Settings
+                 {t('profile.settings')}
              </button>
           </div>
 
@@ -111,35 +113,35 @@ export default function Profile() {
                 animate={{ opacity: 1, x: 0 }}
                 className="glass-panel p-8 sm:p-10 rounded-3xl space-y-8"
               >
-                <h3 className="text-2xl font-black text-forest">Personal Information</h3>
+                <h3 className="text-2xl font-black text-forest">{t('profile.personalInfo')}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">Full Name</label>
+                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">{t('profile.fullName')}</label>
                     <div className="px-6 py-4 bg-white/20 rounded-xl border border-white/40 font-bold text-forest">
                       {profile?.full_name || user.user_metadata?.full_name}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">Email Address</label>
+                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">{t('profile.emailAddress')}</label>
                     <div className="px-6 py-4 bg-white/20 rounded-xl border border-white/40 font-bold text-forest opacity-70">
                       {user.email}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">Phone Number</label>
+                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">{t('profile.phoneNumber')}</label>
                     <div className="px-6 py-4 bg-white/20 rounded-xl border border-white/40 font-bold text-forest">
                       {profile?.phone || '+84 901 234 567'}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">Location</label>
+                    <label className="text-[10px] uppercase font-black text-surface-variant tracking-wider">{t('profile.location')}</label>
                     <div className="px-6 py-4 bg-white/20 rounded-xl border border-white/40 font-bold text-forest">
                       Vinhomes Grand Park, Ho Chi Minh City
                     </div>
                   </div>
                 </div>
                 <button className="btn-primary px-8 py-3 rounded-full text-sm font-bold shadow-lg shadow-sage-dark/20">
-                  Update Information
+                  {t('profile.updateInfo')}
                 </button>
               </motion.div>
             ) : (
@@ -149,9 +151,9 @@ export default function Profile() {
                 className="space-y-6"
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-black text-forest">My Pet Sanctuary</h3>
+                  <h3 className="text-2xl font-black text-forest">{t('profile.myPetSanctuary')}</h3>
                   <button className="bg-sage-dark text-white px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-sage-dark/20 hover:scale-105 transition-transform">
-                    Add New Pet
+                    {t('profile.addNewPet')}
                   </button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -164,8 +166,8 @@ export default function Profile() {
                         <h4 className="text-xl font-bold text-forest">{pet.name}</h4>
                         <p className="text-xs text-surface-variant font-medium mb-3">{pet.breed} • {pet.age}</p>
                         <div className="flex gap-2">
-                          <span className="px-3 py-1 bg-sage/20 text-sage-dark text-[10px] font-bold rounded-full border border-sage/10">HEALTHY</span>
-                          <span className="px-3 py-1 bg-sage/20 text-sage-dark text-[10px] font-bold rounded-full border border-sage/10">VACCINATED</span>
+                          <span className="px-3 py-1 bg-sage/20 text-sage-dark text-[10px] font-bold rounded-full border border-sage/10">{t('profile.healthy')}</span>
+                          <span className="px-3 py-1 bg-sage/20 text-sage-dark text-[10px] font-bold rounded-full border border-sage/10">{t('profile.vaccinated')}</span>
                         </div>
                       </div>
                       <button className="p-2 hover:bg-white/30 rounded-full text-surface-variant hover:text-sage-dark transition-colors">

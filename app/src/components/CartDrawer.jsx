@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, onRemove, totalPrice }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleCheckout = () => {
     onClose();
@@ -28,7 +30,7 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
           >
             {/* Header */}
             <div className="flex justify-between items-center p-6 border-b border-white/30">
-              <h2 className="text-xl font-bold text-forest">Shopping Cart</h2>
+              <h2 className="text-xl font-bold text-forest">{t('cart.title')}</h2>
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
@@ -44,8 +46,8 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
               {cart.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center opacity-50">
                   <span className="material-symbols-outlined text-6xl text-sage mb-4">shopping_cart</span>
-                  <p className="text-lg font-medium text-surface-variant">Your cart is empty</p>
-                  <p className="text-sm text-outline mt-1">Add some goodies for your pet!</p>
+                  <p className="text-lg font-medium text-surface-variant">{t('cart.empty')}</p>
+                  <p className="text-sm text-outline mt-1">{t('cart.emptyHint')}</p>
                 </div>
               ) : (
                 <AnimatePresence>
@@ -96,7 +98,7 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
             {cart.length > 0 && (
               <div className="p-6 border-t border-white/30 space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-surface-variant">Total</span>
+                  <span className="text-surface-variant">{t('cart.total')}</span>
                   <span className="text-2xl font-black text-sage-dark">${totalPrice.toFixed(2)}</span>
                 </div>
                 <motion.button
@@ -105,7 +107,7 @@ export default function CartDrawer({ cart, isOpen, onClose, onUpdateQuantity, on
                   onClick={handleCheckout}
                   className="w-full py-4 btn-primary text-lg"
                 >
-                  Checkout
+                  {t('cart.checkout')}
                 </motion.button>
               </div>
             )}
