@@ -422,7 +422,7 @@ export default function Checkout() {
             <motion.div 
                initial={{ scale: 0.8, opacity: 0, y: 50 }}
                animate={{ scale: 1, opacity: 1, y: 0 }}
-               className="glass-panel-strong p-6 sm:p-12 rounded-[40px] text-center max-w-lg relative z-10 shadow-2xl"
+               className="glass-panel-strong w-full max-w-lg p-6 sm:p-12 max-h-[90vh] overflow-y-auto rounded-[40px] text-center relative z-10 shadow-2xl"
             >
               <div className="w-20 h-20 bg-sage-dark text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                 <span className="material-symbols-outlined text-4xl font-black">check</span>

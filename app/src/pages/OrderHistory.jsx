@@ -213,7 +213,7 @@ export default function OrderHistory() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.92, opacity: 0, y: 24 }}
               transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-              className="relative z-10 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl"
+              className="relative z-10 w-full max-w-lg rounded-[32px] shadow-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden"
               style={{ backgroundColor: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(28px)', border: '1px solid rgba(255,255,255,0.7)' }}
             >
               {/* Hero image */}

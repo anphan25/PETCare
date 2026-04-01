@@ -5,6 +5,7 @@ import { defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
+import { useTranslation } from 'react-i18next';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
@@ -49,6 +50,7 @@ export default function HotelBooking({ onBook }) {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useAuthStore();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const resetForm = () => {
@@ -478,7 +480,7 @@ export default function HotelBooking({ onBook }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
             style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0,0,0,0.18)' }}
             onClick={closeModal}
           >
@@ -488,7 +490,7 @@ export default function HotelBooking({ onBook }) {
               exit={{ scale: 0.8, opacity: 0, y: 40 }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
-              className="rounded-3xl p-10 max-w-md w-full text-center shadow-2xl antigravity-shadow relative"
+              className="rounded-3xl p-5 sm:p-10 max-h-[90vh] overflow-y-auto overflow-x-hidden w-full max-w-md text-center shadow-2xl antigravity-shadow relative"
               style={{ backgroundColor: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.7)' }}
             >
               {/* Close Button */}
@@ -513,10 +515,10 @@ export default function HotelBooking({ onBook }) {
                 </span>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
-                <p className="text-xs uppercase tracking-[0.2em] font-bold text-sage-dark mb-2">Reservation Confirmed</p>
-                <h2 className="text-3xl font-black text-forest mb-3">Sanctuary Booked!</h2>
-                <p className="text-surface-variant text-sm leading-relaxed mb-2">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="w-full">
+                <p className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-sage-dark mb-2 px-2">Reservation Confirmed</p>
+                <h2 className="text-2xl sm:text-3xl font-black text-forest mb-3">Sanctuary Booked!</h2>
+                <p className="text-surface-variant text-sm leading-relaxed mb-2 px-1">
                   <span className="font-bold text-charcoal">{selectedPet?.name}</span> is all set at the
                   <span className="font-bold text-charcoal"> {suiteDetails?.name}</span>.
                 </p>
@@ -526,14 +528,14 @@ export default function HotelBooking({ onBook }) {
                     : ''}
                 </p>
 
-                <div className="flex items-center justify-center gap-2 text-xs font-bold text-sage-dark bg-sage/20 py-2.5 rounded-full mb-6">
+                <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-bold text-sage-dark bg-sage/20 py-2.5 px-3 rounded-2xl sm:rounded-full mb-6 mx-auto">
                   <span className="material-symbols-outlined text-[16px]">verified_user</span>
                   Safe Stay Certified • Vet on-call 24/7
                 </div>
 
                 <button
                   onClick={() => { closeModal(); navigate('/hotel-bookings'); }}
-                  className="w-full py-3.5 rounded-full bg-forest text-white font-bold text-base shadow-xl shadow-forest/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3 sm:py-3.5 rounded-full bg-forest text-white font-bold text-sm sm:text-base shadow-xl shadow-forest/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-xl">receipt_long</span>
                   View My Bookings

@@ -58,7 +58,7 @@ export default function AuthModal({ isOpen, onClose }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-10 overflow-hidden text-center"
+            className="relative w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-10 max-h-[95vh] overflow-y-auto overflow-x-hidden text-center"
           >
             {/* Background mesh accents */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-sage rounded-full mix-blend-multiply filter blur-2xl opacity-40 animate-blob" />
