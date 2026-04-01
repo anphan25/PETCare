@@ -5,7 +5,6 @@ import { defaultPets } from '../data/products';
 import { useMascotStore } from '../stores/useMascotStore';
 import { useAuthStore } from '../stores/useAuthStore';
 import { supabase } from '../supabaseClient';
-import { useTranslation } from 'react-i18next';
 
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate();
