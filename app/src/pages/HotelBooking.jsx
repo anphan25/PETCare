@@ -49,7 +49,6 @@ export default function HotelBooking({ onBook }) {
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { profile } = useAuthStore();
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const resetForm = () => {
