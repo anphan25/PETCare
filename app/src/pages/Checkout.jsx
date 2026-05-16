@@ -1,9 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
-import { useCart } from '../hooks/useStore';
+import { useCart, useAuthStore } from '../hooks/useReduxStore';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { useAuthStore } from '../stores/useAuthStore';
 
 export default function Checkout() {
   const { cart, totalPrice, clearCart } = useCart();

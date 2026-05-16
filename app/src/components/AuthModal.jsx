@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../supabaseClient';
-import { useAuthStore } from '../stores/useAuthStore';
-import { useMascotStore } from '../stores/useMascotStore';
+import { useAuthStore, useMascotStore } from '../hooks/useReduxStore';
 
 export default function AuthModal({ isOpen, onClose }) {
   const { user, profile } = useAuthStore();
-  const setWagging = useMascotStore((state) => state.setWagging);
+  const { setWagging } = useMascotStore();
   const [loading, setLoading] = useState(false);
 
   const signInWithGoogle = async () => {

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../stores/useAuthStore';
+import { useAuthStore } from '../hooks/useReduxStore';
 import { defaultPets } from '../data/products';
 import { useState } from 'react';
 

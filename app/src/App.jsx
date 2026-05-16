@@ -7,9 +7,8 @@ import CartDrawer from './components/CartDrawer';
 import LoadingScreen from './components/LoadingScreen';
 import InteractiveMascot from './components/InteractiveMascot';
 import AuthModal from './components/AuthModal';
-import { useCart, useBookings } from './hooks/useStore';
+import { useCart, useBookings, useAuthStore } from './hooks/useReduxStore';
 import { supabase } from './supabaseClient';
-import { useAuthStore } from './stores/useAuthStore';
 import { useMinimumLoading } from './hooks/useMinimumLoading';
 
 // Lazy load pages for performance optimization

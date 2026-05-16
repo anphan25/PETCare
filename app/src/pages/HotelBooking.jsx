@@ -2,8 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { defaultPets } from '../data/products';
-import { useMascotStore } from '../stores/useMascotStore';
-import { useAuthStore } from '../stores/useAuthStore';
+import { useMascotStore, useAuthStore } from '../hooks/useReduxStore';
 import { supabase } from '../supabaseClient';
 
 function getDaysInMonth(year, month) {
@@ -65,8 +64,7 @@ export default function HotelBooking({ onBook }) {
     resetForm();
   };
   
-  const setWagging = useMascotStore((state) => state.setWagging);
-  const triggerJump = useMascotStore((state) => state.triggerJump);
+  const { setWagging, triggerJump } = useMascotStore();
 
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const daysInMonth = getDaysInMonth(currentYear, currentMonth);

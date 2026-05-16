@@ -1,8 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useMemo, useEffect } from 'react';
-import { useMascotStore } from '../stores/useMascotStore.ts';
-import { useAuthStore } from '../stores/useAuthStore';
-import { useWishlistStore } from '../stores/useWishlistStore';
+import { useMascotStore, useAuthStore, useWishlistStore } from '../hooks/useReduxStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { useMinimumLoading } from '../hooks/useMinimumLoading';
@@ -12,99 +10,6 @@ const sortOptions = [
   { label: 'Price: Low to High', value: 'price-asc' },
   { label: 'Price: High to Low', value: 'price-desc' },
 ];
-
-const dummyData = [
-    {
-        "id": "7633a5dc-1242-444a-875b-c416e7cf05a6",
-        "name": "Salmon Wellness Mix",
-        "description": "Rich in Omega-3 for healthy skin and a shiny coat.",
-        "price": 52.50,
-        "category": "Food",
-        "image_url": "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?q=80&w=400",
-        "stock": 30,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "2b7f92b0-8d06-44b9-bccb-7dcd2b9b0b6e",
-        "name": "Grain-Free Lamb Recipe",
-        "description": "Hypoallergenic lamb formula for pets with sensitive stomachs.",
-        "price": 49.99,
-        "category": "Food",
-        "image_url": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=400",
-        "stock": 25,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "0d17d357-9b3e-4013-9453-20aaba67ece2",
-        "name": "Sage Green Knit Sweater",
-        "description": "Minimalist cozy sweater in our signature sage green color.",
-        "price": 25.00,
-        "category": "Fashion",
-        "image_url": "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=400",
-        "stock": 20,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "2256d6cc-40af-4f63-b71d-e4f3263d105f",
-        "name": "Waterproof Clear Raincoat",
-        "description": "Keep your pet dry and stylish during rainy day walks.",
-        "price": 32.00,
-        "category": "Fashion",
-        "image_url": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?q=80&w=400",
-        "stock": 15,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "21d70d12-1d77-475a-b121-41aab1f1b79e",
-        "name": "Summer Floral Dress",
-        "description": "Lightweight and breathable linen dress for sunny days.",
-        "price": 22.50,
-        "category": "Fashion",
-        "image_url": "https://images.unsplash.com/photo-1591768793355-74d7af23f11d?q=80&w=400",
-        "stock": 18,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "83ee9dc4-2aff-4f41-96b4-e0d100616da2",
-        "name": "Plush Bear Ear Hoodie",
-        "description": "Soft velvet hoodie with adorable bear ears on top.",
-        "price": 29.99,
-        "category": "Fashion",
-        "image_url": "https://images.unsplash.com/photo-1541599540903-21b33de53f5c?q=80&w=400",
-        "stock": 30,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "321ca51e-32cb-4ac7-a687-3289bced2131",
-        "name": "Winter Puffer Coat",
-        "description": "Insulated warm coat for extreme cold weather protection.",
-        "price": 45.00,
-        "category": "Fashion",
-        "image_url": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=400",
-        "stock": 10,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "77dd8cac-d529-4fe0-865b-f597599cc9f5",
-        "name": "Auto-Retractable Leash",
-        "description": "Heavy-duty 5m leash with a comfortable ergonomic grip.",
-        "price": 24.00,
-        "category": "Accessory",
-        "image_url": "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=400",
-        "stock": 35,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    },
-    {
-        "id": "098e2b23-255d-40d4-9cb9-6d00273df8ab",
-        "name": "Ceramic Slow Feeder",
-        "description": "Eco-friendly bowl designed to prevent fast eating and bloat.",
-        "price": 35.00,
-        "category": "Accessory",
-        "image_url": "https://images.unsplash.com/photo-1544191746-e4d3ff41e76b?q=80&w=400",
-        "stock": 20,
-        "created_at": "2026-03-26T16:48:06.151337+00:00"
-    }
-]
 
 const ITEMS_PER_PAGE = 50;
 
@@ -148,8 +53,6 @@ export default function Products({ onAddToCart }) {
         console.error('Error fetching products:', err.message);
         if (isMounted) {
           setError(err.message);
-          // Fallback to dummy data if database fetch fails
-          setAllProducts(dummyData);
         }
       } finally {
         if (isMounted) {
@@ -186,8 +89,7 @@ export default function Products({ onAddToCart }) {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  const setWagging = useMascotStore((state) => state.setWagging);
-  const triggerJump = useMascotStore((state) => state.triggerJump);
+  const { setWagging, triggerJump } = useMascotStore();
 
   const toggleFav = (id) => {
     if (!user) return;

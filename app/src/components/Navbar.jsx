@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
-import { useAuthStore } from '../stores/useAuthStore';
+import { useAuthStore } from '../hooks/useReduxStore';
 import { supabase } from '../supabaseClient';
 
 export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { user, profile } = useAuthStore();
+  const { user, profile, setUser, setProfile } = useAuthStore();
   const menuRef = useRef(null);
 
   // Close dropdown when clicking outside
@@ -34,8 +34,8 @@ export default function Navbar({ cartCount = 0, onCartClick, onAuthClick }) {
     try {
       // Clear UI instantly
       setUserMenuOpen(false);
-      useAuthStore.getState().setUser(null);
-      useAuthStore.getState().setProfile(null);
+      setUser(null);
+      setProfile(null);
       
       // Call Supabase sign out
       await supabase.auth.signOut();

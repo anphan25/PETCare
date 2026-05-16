@@ -1,8 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthStore } from '../stores/useAuthStore';
-import { useWishlistStore } from '../stores/useWishlistStore';
+import { useAuthStore, useWishlistStore } from '../hooks/useReduxStore';
 import { supabase } from '../supabaseClient';
 import PageLoader from '../components/PageLoader';
 import { motion } from 'framer-motion';
