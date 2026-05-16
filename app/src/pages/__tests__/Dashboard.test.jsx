@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import Dashboard from '../Dashboard';
-
+import { foodProducts } from '../../data/products';
 
 // ─── Mocks ──────────────────────────────────────────────────────────────────────
 

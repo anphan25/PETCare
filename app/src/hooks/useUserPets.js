@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
-import { useAuthStore } from '../stores/useAuthStore';
+import { useAuthStore } from './useReduxStore';
 import { defaultPets } from '../data/products';
 
 export function useUserPets() {
